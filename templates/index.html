@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>LangAI - Smart Translator</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🌐
+            </div>
+
+            <div>
+                <h2>LangAI</h2>
+                <span>Smart Translator</span>
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-section">
+
+            <p class="sidebar-title">
+                TRANSLATOR
+            </p>
+
+            <button
+                class="sidebar-btn active"
+                id="translatorSidebarBtn">
+
+                <span>⚡</span>
+                Translate
+
+            </button>
+
+
+            <button
+                class="sidebar-btn"
+                id="historySidebarBtn">
+
+                <span>🕘</span>
+                History
+
+                <span
+                    id="historyBadge"
+                    class="history-badge">
+                    0
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="api-status">
+
+                <span class="status-dot"></span>
+
+                <div>
+
+                    <strong>
+                        Translation API
+                    </strong>
+
+                    <small>
+                        Online
+                    </small>
+
+                </div>
+
+            </div>
+
+            
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Language Translator
+                </h1>
+
+                <p>
+                    Translate naturally across Indian and international languages
+                </p>
+
+            </div>
+
+
+            <button
+                id="topHistoryButton"
+                class="top-history">
+
+                🕘 History
+
+            </button>
+
+        </header>
+
+
+        <!-- =================================================
+             TRANSLATOR
+        ================================================== -->
+
+        <section
+            id="translatorSection"
+            class="translator-container">
+
+
+            <!-- LANGUAGE BAR -->
+
+            <div class="language-bar">
+
+                <div class="language-selector">
+
+                    <label>
+                        FROM
+                    </label>
+
+                    <select id="sourceLanguage">
+
+                        <option value="en">
+                            🇬🇧 English
+                        </option>
+
+                        <option value="hi">
+                            🇮🇳 Hindi
+                        </option>
+
+                        <option value="kn">
+                            🇮🇳 Kannada
+                        </option>
+
+                        <option value="te">
+                            🇮🇳 Telugu
+                        </option>
+
+                        <option value="ta">
+                            🇮🇳 Tamil
+                        </option>
+
+                        <option value="ml">
+                            🇮🇳 Malayalam
+                        </option>
+
+                        <option value="mr">
+                            🇮🇳 Marathi
+                        </option>
+
+                        <option value="fr">
+                            🇫🇷 French
+                        </option>
+
+                        <option value="de">
+                            🇩🇪 German
+                        </option>
+
+                        <option value="es">
+                            🇪🇸 Spanish
+                        </option>
+
+                        <option value="it">
+                            🇮🇹 Italian
+                        </option>
+
+                        <option value="pt">
+                            🇵🇹 Portuguese
+                        </option>
+
+                        <option value="ja">
+                            🇯🇵 Japanese
+                        </option>
+
+                        <option value="ko">
+                            🇰🇷 Korean
+                        </option>
+
+                        <option value="zh">
+                            🇨🇳 Chinese
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    id="swapButton"
+                    class="swap-button"
+                    title="Swap languages">
+
+                    ⇄
+
+                </button>
+
+
+                <div class="language-selector">
+
+                    <label>
+                        TO
+                    </label>
+
+                    <select id="targetLanguage">
+
+                        <option value="hi">
+                            🇮🇳 Hindi
+                        </option>
+
+                        <option value="en">
+                            🇬🇧 English
+                        </option>
+
+                        <option value="kn">
+                            🇮🇳 Kannada
+                        </option>
+
+                        <option value="te">
+                            🇮🇳 Telugu
+                        </option>
+
+                        <option value="ta">
+                            🇮🇳 Tamil
+                        </option>
+
+                        <option value="ml">
+                            🇮🇳 Malayalam
+                        </option>
+
+                        <option value="mr">
+                            🇮🇳 Marathi
+                        </option>
+
+                        <option value="fr">
+                            🇫🇷 French
+                        </option>
+
+                        <option value="de">
+                            🇩🇪 German
+                        </option>
+
+                        <option value="es">
+                            🇪🇸 Spanish
+                        </option>
+
+                        <option value="it">
+                            🇮🇹 Italian
+                        </option>
+
+                        <option value="pt">
+                            🇵🇹 Portuguese
+                        </option>
+
+                        <option value="ja">
+                            🇯🇵 Japanese
+                        </option>
+
+                        <option value="ko">
+                            🇰🇷 Korean
+                        </option>
+
+                        <option value="zh">
+                            🇨🇳 Chinese
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 INPUT LANGUAGE INFORMATION
+            ================================================== -->
+
+            <div class="input-language-info">
+
+                <div>
+
+                    <span class="input-language-icon">
+                        ⌨️
+                    </span>
+
+                    <div>
+
+                        <strong id="inputLanguageTitle">
+                            English input
+                        </strong>
+
+                        <p id="inputLanguageDescription">
+                            Type or paste text in English
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="keyboardToggle"
+                    class="keyboard-toggle">
+
+                    ⌨️ Virtual Keyboard
+
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 VIRTUAL KEYBOARD
+            ================================================== -->
+
+            <div
+                id="virtualKeyboard"
+                class="virtual-keyboard hidden">
+
+                <div class="keyboard-header">
+
+                    <div>
+
+                        <strong id="keyboardTitle">
+                            English Keyboard
+                        </strong>
+
+                        <small id="keyboardSubtitle">
+                            Click characters to insert them
+                        </small>
+
+                    </div>
+
+                    <button
+                        id="closeKeyboard"
+                        type="button">
+
+                        ✕
+
+                    </button>
+
+                </div>
+
+
+                <!-- Keyboard mode information -->
+
+                <div
+                    id="keyboardModeInfo"
+                    class="keyboard-mode-info">
+
+                    Select a character to type in the selected language.
+
+                </div>
+
+
+                <!-- Keyboard -->
+
+                <div
+                    id="keyboardKeys"
+                    class="keyboard-keys">
+                </div>
+
+
+                <!-- Keyboard bottom actions -->
+
+                <div class="keyboard-bottom-actions">
+
+                    <button
+                        id="keyboardClearButton"
+                        type="button"
+                        class="keyboard-action">
+
+                        🗑 Clear
+
+                    </button>
+
+                    <button
+                        id="keyboardSpaceButton"
+                        type="button"
+                        class="keyboard-space">
+
+                        Space
+
+                    </button>
+
+                    <button
+                        id="keyboardBackspaceButton"
+                        type="button"
+                        class="keyboard-action">
+
+                        ⌫ Backspace
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 TRANSLATION PANELS
+            ================================================== -->
+
+            <div class="translation-grid">
+
+
+                <!-- INPUT -->
+
+                <div class="translation-panel">
+
+                    <div class="panel-header">
+
+                        <span>
+                            Your text
+                        </span>
+
+                        <span
+                            id="charCount"
+                            class="char-count">
+
+                            0 
+
+                        </span>
+
+                    </div>
+                    <textarea 
+                        id="inputText" 
+                        placeholder="Type or paste your text here..."></textarea>
+
+
+                    
+
+                    <div class="panel-footer">
+
+    <span class="hint">
+        You can type or speak in the selected language
+    </span>
+
+    <div class="input-actions">
+
+        <button
+            id="voiceInputButton"
+            class="mini-button"
+            type="button">
+            🎤 Voice Input
+        </button>
+
+        <button
+            id="readInputButton"
+            class="mini-button"
+            type="button">
+            🔊 Read Input
+        </button>
+
+        <button
+            id="clearInputButton"
+            class="mini-button"
+            type="button">
+            Clear
+        </button>
+
+    </div>
+
+</div>
+
+                </div>
+
+
+                <!-- OUTPUT -->
+
+                <div class="translation-panel output-panel">
+
+                    <div class="panel-header">
+
+                        <span>
+                            Translation
+                        </span>
+
+                        <span class="translated-label">
+
+                            ✓ Ready
+
+                        </span>
+
+                    </div>
+
+
+                    <textarea
+                        id="outputText"
+                        readonly
+                        placeholder="Your translation will appear here..."></textarea>
+
+
+                    <div class="panel-footer">
+
+                        <span
+                            id="translationStatus"
+                            class="hint">
+
+                            Waiting for translation
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TRANSLATE BUTTON -->
+
+            <button
+                id="translateButton"
+                class="translate-button">
+
+                ✨ Translate
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </button>
+
+
+            <!-- LOADING -->
+
+            <div
+                id="loading"
+                class="loading hidden">
+
+                <div class="spinner"></div>
+
+                <span>
+                    Translating your text...
+                </span>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="message"
+                class="message">
+            </div>
+
+
+            <!-- ACTION BUTTONS -->
+
+            <div class="action-buttons">
+
+                <button
+                    id="copyButton"
+                    class="action-button">
+
+                    📋 Copy
+
+                </button>
+
+
+                <button
+                    id="speakButton"
+                    class="action-button">
+
+                    🔊 Listen
+
+                </button>
+
+
+                <button
+                    id="clearButton"
+                    class="action-button">
+
+                    🗑 Clear
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             HISTORY
+        ================================================== -->
+
+        <section
+            id="historySection"
+            class="history-section hidden">
+
+
+            <div class="history-header">
+
+                <div>
+
+                    <h2>
+                        Translation History
+                    </h2>
+
+                    <p>
+                        Your recent translations
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="clearHistoryButton"
+                    class="clear-history">
+
+                    🗑 Clear All
+
+                </button>
+
+            </div>
+
+
+            <div class="history-search">
+
+                🔍
+
+                <input
+                    id="historySearch"
+                    type="text"
+                    placeholder="Search your translation history...">
+
+            </div>
+
+
+            <div
+                id="historyList"
+                class="history-list">
+            </div>
+
+
+            <div
+                id="emptyHistory"
+                class="empty-history">
+
+                <div class="empty-icon">
+                    🕘
+                </div>
+
+                <h3>
+                    No translation history
+                </h3>
+
+                <p>
+                    Your completed translations will appear here.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- FOOTER -->
+
+        <footer>
+
+            <span>
+                🌐 LangAI
+            </span>
+
+            <span>
+                •
+            </span>
+
+            <span>
+                AI Project
+            </span>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='script.js') }}">
+</script>
+
+</body>
+
+</html>
