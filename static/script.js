@@ -1,6 +1,6 @@
 /* =========================================================
-   LINGUAAI — SMART LANGUAGE TRANSLATOR
-   Complete script.js
+   LANGAI — SMART LANGUAGE TRANSLATOR
+   Corrected Complete JavaScript
 ========================================================= */
 
 
@@ -8,29 +8,18 @@
    DOM ELEMENTS
 ========================================================= */
 
-const inputText =
-    document.getElementById("inputText");
+const inputText = document.getElementById("inputText");
+const outputText = document.getElementById("outputText");
 
-const outputText =
-    document.getElementById("outputText");
+const sourceLanguage = document.getElementById("sourceLanguage");
+const targetLanguage = document.getElementById("targetLanguage");
 
-const sourceLanguage =
-    document.getElementById("sourceLanguage");
+const translateButton = document.getElementById("translateButton");
+const copyButton = document.getElementById("copyButton");
+const speakButton = document.getElementById("speakButton");
 
-const targetLanguage =
-    document.getElementById("targetLanguage");
-
-const translateButton =
-    document.getElementById("translateButton");
-
-const copyButton =
-    document.getElementById("copyButton");
-
-const speakButton =
-    document.getElementById("speakButton");
-
-const clearButton =
-    document.getElementById("clearButton");
+const clearButton = document.getElementById("clearButton");
+const clearInputButton = document.getElementById("clearInputButton");
 
 const voiceInputButton =
     document.getElementById("voiceInputButton");
@@ -47,35 +36,8 @@ const charCount =
 const loading =
     document.getElementById("loading");
 
-const message =
+const messageBox =
     document.getElementById("message");
-
-const historySection =
-    document.getElementById("historySection");
-
-const historyList =
-    document.getElementById("historyList");
-
-const emptyHistory =
-    document.getElementById("emptyHistory");
-
-const historySearch =
-    document.getElementById("historySearch");
-
-const clearHistoryButton =
-    document.getElementById("clearHistoryButton");
-
-const historyBadge =
-    document.getElementById("historyBadge");
-
-const historySidebarBtn =
-    document.getElementById("historySidebarBtn");
-
-const topHistoryButton =
-    document.getElementById("topHistoryButton");
-
-const translatorSidebarBtn =
-    document.getElementById("translatorSidebarBtn");
 
 const translationStatus =
     document.getElementById("translationStatus");
@@ -101,1547 +63,454 @@ const keyboardSubtitle =
 const keyboardModeInfo =
     document.getElementById("keyboardModeInfo");
 
+const keyboardClearButton =
+    document.getElementById("keyboardClearButton");
+
+const keyboardSpaceButton =
+    document.getElementById("keyboardSpaceButton");
+
+const keyboardBackspaceButton =
+    document.getElementById("keyboardBackspaceButton");
+
 const inputLanguageTitle =
     document.getElementById("inputLanguageTitle");
 
 const inputLanguageDescription =
-    document.getElementById(
-        "inputLanguageDescription"
-    );
+    document.getElementById("inputLanguageDescription");
 
-const keyboardClearButton =
-    document.getElementById(
-        "keyboardClearButton"
-    );
+const historySidebarBtn =
+    document.getElementById("historySidebarBtn");
 
-const keyboardSpaceButton =
-    document.getElementById(
-        "keyboardSpaceButton"
-    );
+const translatorSidebarBtn =
+    document.getElementById("translatorSidebarBtn");
 
-const keyboardBackspaceButton =
-    document.getElementById(
-        "keyboardBackspaceButton"
-    );
+const historySection =
+    document.getElementById("historySection");
+
+const translatorSection =
+    document.getElementById("translatorSection");
+
+const historyList =
+    document.getElementById("historyList");
+
+const emptyHistory =
+    document.getElementById("emptyHistory");
+
+const historyBadge =
+    document.getElementById("historyBadge");
+
+const historySearch =
+    document.getElementById("historySearch");
+
+const clearHistoryButton =
+    document.getElementById("clearHistoryButton");
+
+const topHistoryButton =
+    document.getElementById("topHistoryButton");
 
 
 /* =========================================================
-   LANGUAGE NAMES
+   LANGUAGE INFORMATION
 ========================================================= */
 
 const languageNames = {
 
     en: "English",
-
     hi: "Hindi",
-
     kn: "Kannada",
-
     te: "Telugu",
-
     ta: "Tamil",
-
     ml: "Malayalam",
-
     mr: "Marathi",
 
     fr: "French",
-
     de: "German",
-
     es: "Spanish",
-
     it: "Italian",
-
     pt: "Portuguese",
-
     ja: "Japanese",
-
     ko: "Korean",
-
     zh: "Chinese"
 
 };
 
+
 const inputPlaceholders = {
 
     en: "Type here...",
-
     hi: "यहाँ टाइप करें...",
-
     kn: "ಇಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ...",
-
     te: "ఇక్కడ టైప్ చేయండి...",
-
     ta: "இங்கே தட்டச்சு செய்யவும்...",
-
     ml: "ഇവിടെ ടൈപ്പ് ചെയ്യുക...",
-
     mr: "येथे टाइप करा...",
 
     fr: "Tapez ici...",
-
     de: "Hier eingeben...",
-
     es: "Escribe aquí...",
-
     it: "Digita qui...",
-
     pt: "Digite aqui...",
-
     ja: "ここに入力してください...",
-
     ko: "여기에 입력하세요...",
-
     zh: "在这里输入..."
 
 };
 
 
 /* =========================================================
-   KEYBOARD DATA
+   SPEECH LANGUAGE MAP
 ========================================================= */
 
-/*
-   type:
+function getSpeechLanguage(language) {
 
-   vowel
-   consonant
-   matra
-   special
-   punctuation
-*/
+    const map = {
 
+        en: "en-IN",
+        hi: "hi-IN",
+        kn: "kn-IN",
+        te: "te-IN",
+        ta: "ta-IN",
+        ml: "ml-IN",
+        mr: "mr-IN",
+
+        fr: "fr-FR",
+        de: "de-DE",
+        es: "es-ES",
+        it: "it-IT",
+        pt: "pt-PT",
+        ja: "ja-JP",
+        ko: "ko-KR",
+        zh: "zh-CN"
+
+    };
+
+    return map[language] || "en-IN";
+}
+
+
+/* =========================================================
+   MESSAGE SYSTEM
+========================================================= */
+
+function showMessage(text, type = "info") {
+
+    if (!messageBox) {
+        return;
+    }
+
+    messageBox.textContent = text;
+
+    messageBox.className = "message";
+
+    messageBox.classList.add(type);
+
+    messageBox.classList.remove("hidden");
+
+    clearTimeout(window.langAiMessageTimer);
+
+    window.langAiMessageTimer =
+        setTimeout(() => {
+
+            messageBox.classList.add("hidden");
+
+        }, 4000);
+}
+
+
+/* =========================================================
+   LANGUAGE NAME
+========================================================= */
+
+function getLanguageName(code) {
+
+    return languageNames[code] || "Selected language";
+}
+
+
+/* =========================================================
+   CHARACTER COUNT
+========================================================= */
+
+function updateCharacterCount() {
+
+    if (!charCount) {
+        return;
+    }
+
+    charCount.textContent =
+        `${inputText.value.length} characters`;
+}
+
+
+inputText.addEventListener(
+    "input",
+    updateCharacterCount
+);
+
+
+/* =========================================================
+   INPUT LANGUAGE INFORMATION
+========================================================= */
+
+function updateInputLanguageInfo() {
+
+    const lang =
+        sourceLanguage.value;
+
+    const name =
+        getLanguageName(lang);
+
+    if (inputLanguageTitle) {
+
+        inputLanguageTitle.textContent =
+            `${name} input`;
+
+    }
+
+    if (inputLanguageDescription) {
+
+        inputLanguageDescription.textContent =
+            `Type, paste, or speak in ${name}`;
+
+    }
+
+    inputText.placeholder =
+        inputPlaceholders[lang]
+        ||
+        "Type or paste your text here...";
+
+}
+
+
+/* =========================================================
+   VIRTUAL KEYBOARD DATA
+========================================================= */
 
 const keyboards = {
 
-
-    /* =====================================================
-       ENGLISH
-    ====================================================== */
-
     en: [
-
-        {
-            type: "letters",
-            chars: [..."QWERTYUIOP"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ASDFGHJKL"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ZXCVBNM"]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-",
-                "(",
-                ")"
-            ]
-        }
-
+        [..."QWERTYUIOP"],
+        [..."ASDFGHJKL"],
+        [..."ZXCVBNM"],
+        [".", ",", "?", "!", "'", "\"", ":", ";", "-", "(", ")"]
     ],
-
-
-    /* =====================================================
-       HINDI
-    ====================================================== */
 
     hi: [
+        [
+            "अ","आ","इ","ई","उ","ऊ","ऋ",
+            "ए","ऐ","ओ","औ"
+        ],
 
-        {
-            type: "vowel",
-            chars: [
-                "अ",
-                "आ",
-                "इ",
-                "ई",
-                "उ",
-                "ऊ",
-                "ऋ",
-                "ए",
-                "ऐ",
-                "ओ",
-                "औ"
-            ]
-        },
+        [
+            "क","ख","ग","घ","ङ",
+            "च","छ","ज","झ","ञ",
+            "ट","ठ","ड","ढ","ण"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "क",
-                "ख",
-                "ग",
-                "घ",
-                "ङ",
-                "च",
-                "छ",
-                "ज",
-                "झ",
-                "ञ",
-                "ट",
-                "ठ",
-                "ड",
-                "ढ",
-                "ण"
-            ]
-        },
+        [
+            "त","थ","द","ध","न",
+            "प","फ","ब","भ","म",
+            "य","र","ल","व"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "त",
-                "थ",
-                "द",
-                "ध",
-                "न",
-                "प",
-                "फ",
-                "ब",
-                "भ",
-                "म",
-                "य",
-                "र",
-                "ल",
-                "व"
-            ]
-        },
+        [
+            "श","ष","स","ह","क्ष","त्र","ज्ञ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "श",
-                "ष",
-                "स",
-                "ह",
-                "क्ष",
-                "त्र",
-                "ज्ञ"
-            ]
-        },
+        [
+            "ा","ि","ी","ु","ू","ृ","े","ै","ो","ौ"
+        ],
 
-        {
-            type: "matra",
-            chars: [
-                "ा",
-                "ि",
-                "ी",
-                "ु",
-                "ू",
-                "ृ",
-                "े",
-                "ै",
-                "ो",
-                "ौ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ं",
-                "ँ",
-                "ः",
-                "्",
-                "़",
-                "।"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
+        [
+            "ं","ँ","ः","्","़","।"
+        ]
     ],
-
-
-    /* =====================================================
-       MARATHI
-    ====================================================== */
 
     mr: [
+        [
+            "अ","आ","इ","ई","उ","ऊ","ऋ",
+            "ए","ऐ","ओ","औ"
+        ],
 
-        {
-            type: "vowel",
-            chars: [
-                "अ",
-                "आ",
-                "इ",
-                "ई",
-                "उ",
-                "ऊ",
-                "ऋ",
-                "ए",
-                "ऐ",
-                "ओ",
-                "औ"
-            ]
-        },
+        [
+            "क","ख","ग","घ","ङ",
+            "च","छ","ज","झ","ञ",
+            "ट","ठ","ड","ढ","ण"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "क",
-                "ख",
-                "ग",
-                "घ",
-                "ङ",
-                "च",
-                "छ",
-                "ज",
-                "झ",
-                "ञ",
-                "ट",
-                "ठ",
-                "ड",
-                "ढ",
-                "ण"
-            ]
-        },
+        [
+            "त","थ","द","ध","न",
+            "प","फ","ब","भ","म",
+            "य","र","ल","व"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "त",
-                "थ",
-                "द",
-                "ध",
-                "न",
-                "प",
-                "फ",
-                "ब",
-                "भ",
-                "म",
-                "य",
-                "र",
-                "ल",
-                "व"
-            ]
-        },
+        [
+            "श","ष","स","ह","ळ","क्ष","ज्ञ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "श",
-                "ष",
-                "स",
-                "ह",
-                "ळ",
-                "क्ष",
-                "ज्ञ"
-            ]
-        },
+        [
+            "ा","ि","ी","ु","ू","ृ","े","ै","ो","ौ"
+        ],
 
-        {
-            type: "matra",
-            chars: [
-                "ा",
-                "ि",
-                "ी",
-                "ु",
-                "ू",
-                "ृ",
-                "े",
-                "ै",
-                "ो",
-                "ौ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ं",
-                "ँ",
-                "ः",
-                "्",
-                "़",
-                "।"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
+        [
+            "ं","ँ","ः","्","़","।"
+        ]
     ],
-
-
-    /* =====================================================
-       KANNADA
-    ====================================================== */
 
     kn: [
+        [
+            "ಅ","ಆ","ಇ","ಈ","ಉ","ಊ","ಋ",
+            "ಎ","ಏ","ಐ","ಒ","ಓ","ಔ"
+        ],
 
-        {
-            type: "vowel",
-            chars: [
-                "ಅ",
-                "ಆ",
-                "ಇ",
-                "ಈ",
-                "ಉ",
-                "ಊ",
-                "ಋ",
-                "ಎ",
-                "ಏ",
-                "ಐ",
-                "ಒ",
-                "ಓ",
-                "ಔ"
-            ]
-        },
+        [
+            "ಕ","ಖ","ಗ","ಘ","ಙ",
+            "ಚ","ಛ","ಜ","ಝ","ಞ",
+            "ಟ","ಠ","ಡ","ಢ","ಣ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "ಕ",
-                "ಖ",
-                "ಗ",
-                "ಘ",
-                "ಙ",
-                "ಚ",
-                "ಛ",
-                "ಜ",
-                "ಝ",
-                "ಞ",
-                "ಟ",
-                "ಠ",
-                "ಡ",
-                "ಢ",
-                "ಣ"
-            ]
-        },
+        [
+            "ತ","ಥ","ದ","ಧ","ನ",
+            "ಪ","ಫ","ಬ","ಭ","ಮ",
+            "ಯ","ರ","ಲ","ವ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "ತ",
-                "ಥ",
-                "ದ",
-                "ಧ",
-                "ನ",
-                "ಪ",
-                "ಫ",
-                "ಬ",
-                "ಭ",
-                "ಮ",
-                "ಯ",
-                "ರ",
-                "ಲ",
-                "ವ"
-            ]
-        },
+        [
+            "ಶ","ಷ","ಸ","ಹ","ಳ","ಕ್ಷ","ಜ್ಞ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "ಶ",
-                "ಷ",
-                "ಸ",
-                "ಹ",
-                "ಳ",
-                "ಕ್ಷ",
-                "ಜ್ಞ"
-            ]
-        },
+        [
+            "ಾ","ಿ","ೀ","ು","ೂ","ೃ",
+            "ೆ","ೇ","ೈ","ೊ","ೋ","ೌ"
+        ],
 
-        {
-            type: "matra",
-            chars: [
-                "ಾ",
-                "ಿ",
-                "ೀ",
-                "ು",
-                "ೂ",
-                "ೃ",
-                "ೆ",
-                "ೇ",
-                "ೈ",
-                "ೊ",
-                "ೋ",
-                "ೌ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ಂ",
-                "ಃ",
-                "್",
-                "಼",
-                "।"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
+        [
+            "ಂ","ಃ","್","಼","।"
+        ]
     ],
-
-
-    /* =====================================================
-       TELUGU
-    ====================================================== */
 
     te: [
+        [
+            "అ","ఆ","ఇ","ఈ","ఉ","ఊ",
+            "ఋ","ఎ","ఏ","ఐ","ఒ","ఓ","ఔ"
+        ],
 
-        {
-            type: "vowel",
-            chars: [
-                "అ",
-                "ఆ",
-                "ఇ",
-                "ఈ",
-                "ఉ",
-                "ఊ",
-                "ఋ",
-                "ఎ",
-                "ఏ",
-                "ఐ",
-                "ఒ",
-                "ఓ",
-                "ఔ"
-            ]
-        },
+        [
+            "క","ఖ","గ","ఘ","ఙ",
+            "చ","ఛ","జ","ఝ","ఞ",
+            "ట","ఠ","డ","ఢ","ణ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "క",
-                "ఖ",
-                "గ",
-                "ఘ",
-                "ఙ",
-                "చ",
-                "ఛ",
-                "జ",
-                "ఝ",
-                "ఞ",
-                "ట",
-                "ఠ",
-                "డ",
-                "ఢ",
-                "ణ"
-            ]
-        },
+        [
+            "త","థ","ద","ధ","న",
+            "ప","ఫ","బ","భ","మ",
+            "య","ర","ల","వ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "త",
-                "థ",
-                "ద",
-                "ధ",
-                "న",
-                "ప",
-                "ఫ",
-                "బ",
-                "భ",
-                "మ",
-                "య",
-                "ర",
-                "ల",
-                "వ"
-            ]
-        },
+        [
+            "శ","ష","స","హ","ళ","క్ష","జ్ఞ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "శ",
-                "ష",
-                "స",
-                "హ",
-                "ళ",
-                "క్ష",
-                "జ్ఞ"
-            ]
-        },
+        [
+            "ా","ి","ీ","ు","ూ",
+            "ృ","ె","ే","ై","ొ","ో","ౌ"
+        ],
 
-        {
-            type: "matra",
-            chars: [
-                "ా",
-                "ి",
-                "ీ",
-                "ు",
-                "ూ",
-                "ృ",
-                "ె",
-                "ే",
-                "ై",
-                "ొ",
-                "ో",
-                "ౌ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ం",
-                "ః",
-                "్",
-                "।"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
+        [
+            "ం","ః","్","।"
+        ]
     ],
-
-
-    /* =====================================================
-       TAMIL
-    ====================================================== */
 
     ta: [
+        [
+            "அ","ஆ","இ","ஈ","உ","ஊ",
+            "எ","ஏ","ஐ","ஒ","ஓ","ஔ"
+        ],
 
-        {
-            type: "vowel",
-            chars: [
-                "அ",
-                "ஆ",
-                "இ",
-                "ஈ",
-                "உ",
-                "ஊ",
-                "எ",
-                "ஏ",
-                "ஐ",
-                "ஒ",
-                "ஓ",
-                "ஔ"
-            ]
-        },
+        [
+            "க","ங","ச","ஞ","ட",
+            "ண","த","ந","ப","ம"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "க",
-                "ங",
-                "ச",
-                "ஞ",
-                "ட",
-                "ண",
-                "த",
-                "ந",
-                "ப",
-                "ம",
-                "ய",
-                "ர",
-                "ல",
-                "வ"
-            ]
-        },
+        [
+            "ய","ர","ல","வ","ழ","ள",
+            "ற","ன","ஜ","ஷ","ஸ","ஹ"
+        ],
 
-        {
-            type: "consonant",
-            chars: [
-                "ழ",
-                "ள",
-                "ற",
-                "ன",
-                "ஜ",
-                "ஷ",
-                "ஸ",
-                "ஹ"
-            ]
-        },
+        [
+            "ா","ி","ீ","ு","ூ",
+            "ெ","ே","ை","ொ","ோ","ௌ"
+        ],
 
-        {
-            type: "matra",
-            chars: [
-                "ா",
-                "ி",
-                "ீ",
-                "ு",
-                "ூ",
-                "ெ",
-                "ே",
-                "ை",
-                "ொ",
-                "ோ",
-                "ௌ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "்",
-                "ஂ",
-                "ஃ",
-                "।"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
+        [
+            "்","ம்","।"
+        ]
     ],
-
-
-    /* =====================================================
-       MALAYALAM
-    ====================================================== */
 
     ml: [
-
-        {
-            type: "vowel",
-            chars: [
-                "അ",
-                "ആ",
-                "ഇ",
-                "ഈ",
-                "ഉ",
-                "ഊ",
-                "ഋ",
-                "എ",
-                "ഏ",
-                "ഐ",
-                "ഒ",
-                "ഓ",
-                "ഔ"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "ക",
-                "ഖ",
-                "ഗ",
-                "ഘ",
-                "ങ",
-                "ച",
-                "ഛ",
-                "ജ",
-                "ഝ",
-                "ഞ",
-                "ട",
-                "ഠ",
-                "ഡ",
-                "ഢ",
-                "ണ"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "ത",
-                "ഥ",
-                "ദ",
-                "ധ",
-                "ന",
-                "പ",
-                "ഫ",
-                "ബ",
-                "ഭ",
-                "മ",
-                "യ",
-                "ര",
-                "ല",
-                "വ"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "ശ",
-                "ഷ",
-                "സ",
-                "ഹ",
-                "ള",
-                "ഴ",
-                "റ",
-                "ക്ഷ"
-            ]
-        },
-
-        {
-            type: "matra",
-            chars: [
-                "ാ",
-                "ി",
-                "ീ",
-                "ു",
-                "ൂ",
-                "ൃ",
-                "െ",
-                "േ",
-                "ൈ",
-                "ൊ",
-                "ോ",
-                "ൌ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ം",
-                "ഃ",
-                "്",
-                "ൺ",
-                "ൻ",
-                "ർ",
-                "ൽ",
-                "ൾ",
-                "ൿ",
-                "।"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       FRENCH
-    ====================================================== */
-
-    fr: [
-
-        {
-            type: "letters",
-            chars: [..."AZERTYUIOP"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."QSDFGHJKLM"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."WXCVBN"]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "é",
-                "è",
-                "ê",
-                "ë",
-                "à",
-                "â",
-                "ä",
-                "ç",
-                "ù",
-                "û",
-                "ü",
-                "ô",
-                "î",
-                "ï",
-                "œ"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       GERMAN
-    ====================================================== */
-
-    de: [
-
-        {
-            type: "letters",
-            chars: [..."QWERTZUIOP"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ASDFGHJKL"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."YXCVBNM"]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ä",
-                "ö",
-                "ü",
-                "Ä",
-                "Ö",
-                "Ü",
-                "ß"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       SPANISH
-    ====================================================== */
-
-    es: [
-
-        {
-            type: "letters",
-            chars: [..."QWERTYUIOP"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ASDFGHJKLÑ"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ZXCVBNM"]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "á",
-                "é",
-                "í",
-                "ó",
-                "ú",
-                "ü",
-                "ñ",
-                "¿",
-                "¡"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       ITALIAN
-    ====================================================== */
-
-    it: [
-
-        {
-            type: "letters",
-            chars: [..."QWERTYUIOP"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ASDFGHJKL"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ZXCVBNM"]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "à",
-                "è",
-                "é",
-                "ì",
-                "ò",
-                "ù"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       PORTUGUESE
-    ====================================================== */
-
-    pt: [
-
-        {
-            type: "letters",
-            chars: [..."QWERTYUIOP"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ASDFGHJKL"]
-        },
-
-        {
-            type: "letters",
-            chars: [..."ZXCVBNM"]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ã",
-                "õ",
-                "á",
-                "à",
-                "â",
-                "ä",
-                "ê",
-                "é",
-                "í",
-                "ó",
-                "ô",
-                "ú",
-                "ç"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                "'",
-                "\"",
-                ":",
-                ";",
-                "-"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       JAPANESE
-    ====================================================== */
-
-    ja: [
-
-        {
-            type: "vowel",
-            chars: [
-                "あ",
-                "い",
-                "う",
-                "え",
-                "お"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "か",
-                "き",
-                "く",
-                "け",
-                "こ",
-                "さ",
-                "し",
-                "す",
-                "せ",
-                "そ"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "た",
-                "ち",
-                "つ",
-                "て",
-                "と",
-                "な",
-                "に",
-                "ぬ",
-                "ね",
-                "の"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "は",
-                "ひ",
-                "ふ",
-                "へ",
-                "ほ",
-                "ま",
-                "み",
-                "む",
-                "め",
-                "も"
-            ]
-        },
-
-        {
-            type: "consonant",
-            chars: [
-                "や",
-                "ゆ",
-                "よ",
-                "ら",
-                "り",
-                "る",
-                "れ",
-                "ろ",
-                "わ",
-                "を",
-                "ん"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "が",
-                "ぎ",
-                "ぐ",
-                "げ",
-                "ご",
-                "ざ",
-                "じ",
-                "ず",
-                "ぜ",
-                "ぞ",
-                "だ",
-                "ぢ",
-                "づ",
-                "で",
-                "ど",
-                "ば",
-                "び",
-                "ぶ",
-                "べ",
-                "ぼ",
-                "ぱ",
-                "ぴ",
-                "ぷ",
-                "ぺ",
-                "ぽ"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                "、",
-                "。",
-                "？",
-                "！",
-                "「",
-                "」",
-                "・"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       KOREAN
-    ====================================================== */
-
-    ko: [
-
-        {
-            type: "consonant",
-            chars: [
-                "ㄱ",
-                "ㄴ",
-                "ㄷ",
-                "ㄹ",
-                "ㅁ",
-                "ㅂ",
-                "ㅅ",
-                "ㅇ",
-                "ㅈ",
-                "ㅊ",
-                "ㅋ",
-                "ㅌ",
-                "ㅍ",
-                "ㅎ"
-            ]
-        },
-
-        {
-            type: "vowel",
-            chars: [
-                "ㅏ",
-                "ㅑ",
-                "ㅓ",
-                "ㅕ",
-                "ㅗ",
-                "ㅛ",
-                "ㅜ",
-                "ㅠ",
-                "ㅡ",
-                "ㅣ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ㄲ",
-                "ㄸ",
-                "ㅃ",
-                "ㅆ",
-                "ㅉ"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "ㅐ",
-                "ㅔ",
-                "ㅚ",
-                "ㅟ",
-                "ㅢ",
-                "ㅘ",
-                "ㅙ",
-                "ㅝ",
-                "ㅞ"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                ".",
-                ",",
-                "?",
-                "!",
-                ":",
-                ";"
-            ]
-        }
-
-    ],
-
-
-    /* =====================================================
-       CHINESE
-    ====================================================== */
-
-    zh: [
-
-        {
-            type: "special",
-            chars: [
-                "你",
-                "好",
-                "我",
-                "是",
-                "的",
-                "人",
-                "中",
-                "国",
-                "天",
-                "地"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "学",
-                "生",
-                "爱",
-                "家",
-                "大",
-                "小",
-                "上",
-                "下",
-                "来",
-                "去"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "吃",
-                "喝",
-                "看",
-                "说",
-                "谢",
-                "再",
-                "见",
-                "好",
-                "吗",
-                "很"
-            ]
-        },
-
-        {
-            type: "special",
-            chars: [
-                "语",
-                "言",
-                "文",
-                "字",
-                "中",
-                "文",
-                "英",
-                "日",
-                "韩",
-                "印"
-            ]
-        },
-
-        {
-            type: "punctuation",
-            chars: [
-                "，",
-                "。",
-                "？",
-                "！",
-                "：",
-                "；",
-                "「",
-                "」"
-            ]
-        }
-
+        [
+            "അ","ആ","ഇ","ഈ","ഉ","ഊ",
+            "ഋ","എ","ഏ","ഐ","ഒ","ഓ","ഔ"
+        ],
+
+        [
+            "ക","ഖ","ഗ","ഘ","ങ",
+            "ച","ഛ","ജ","ഝ","ഞ",
+            "ട","ഠ","ഡ","ഢ","ണ"
+        ],
+
+        [
+            "ത","ഥ","ദ","ധ","ന",
+            "പ","ഫ","ബ","ഭ","മ",
+            "യ","ര","ല","വ"
+        ],
+
+        [
+            "ശ","ഷ","സ","ഹ","ള","ഴ","റ"
+        ],
+
+        [
+            "ാ","ി","ീ","ു","ൂ",
+            "ൃ","െ","േ","ൈ","ൊ","ോ","ൗ"
+        ],
+
+        [
+            "ം","ഃ","്","।"
+        ]
     ]
 
 };
 
 
 /* =========================================================
-   KEYBOARD INFORMATION
+   KEYBOARD RENDER
 ========================================================= */
 
-const keyboardDescriptions = {
+function renderKeyboard() {
 
-    en:
-        "English keyboard with letters and punctuation.",
-
-    hi:
-        "Hindi keyboard with vowels, consonants, matras, halant and Devanagari special characters.",
-
-    mr:
-        "Marathi keyboard with Devanagari vowels, consonants, matras, halant and special characters.",
-
-    kn:
-        "Kannada keyboard with vowels, consonants, vowel signs, virama and Kannada symbols.",
-
-    te:
-        "Telugu keyboard with vowels, consonants, vowel signs, virama and Telugu symbols.",
-
-    ta:
-        "Tamil keyboard with vowels, consonants, vowel signs and pulli.",
-
-    ml:
-        "Malayalam keyboard with vowels, consonants, vowel signs, chandrakkala and Malayalam symbols.",
-
-    fr:
-        "French keyboard with accented characters.",
-
-    de:
-        "German keyboard with Ä, Ö, Ü and ß.",
-
-    es:
-        "Spanish keyboard with Ñ, accents, ¿ and ¡.",
-
-    it:
-        "Italian keyboard with accented characters.",
-
-    pt:
-        "Portuguese keyboard with accented characters.",
-
-    ja:
-        "Japanese Hiragana keyboard with voiced characters and punctuation.",
-
-    ko:
-        "Korean Hangul jamo keyboard.",
-
-    zh:
-        "Chinese common-character keyboard with Chinese punctuation."
-
-};
-
-
-/* =========================================================
-   CREATE KEYBOARD
-========================================================= */
-
-function createKeyboard(language) {
-
-    keyboardKeys.innerHTML = "";
-
-    const groups =
-        keyboards[language];
-
-
-    if (!groups) {
-
-        keyboardModeInfo.textContent =
-            "This language can be typed using your physical keyboard or pasted directly.";
-
+    if (!keyboardKeys) {
         return;
     }
 
+    const lang =
+        sourceLanguage.value;
 
-    keyboardModeInfo.textContent =
-        keyboardDescriptions[language]
-        || "Select characters to insert them.";
+    keyboardKeys.innerHTML = "";
 
+    const rows =
+        keyboards[lang]
+        ||
+        keyboards.en;
 
-    groups.forEach(group => {
+    rows.forEach(row => {
 
-        group.chars.forEach(character => {
+        const rowElement =
+            document.createElement("div");
+
+        rowElement.className =
+            "keyboard-row";
+
+        row.forEach(character => {
 
             const button =
                 document.createElement("button");
@@ -1652,83 +521,60 @@ function createKeyboard(language) {
             button.className =
                 "keyboard-key";
 
-
-            if (group.type === "vowel") {
-
-                button.classList.add(
-                    "keyboard-vowel"
-                );
-
-            }
-
-            else if (group.type === "consonant") {
-
-                button.classList.add(
-                    "keyboard-consonant"
-                );
-
-            }
-
-            else if (group.type === "matra") {
-
-                button.classList.add(
-                    "keyboard-matra"
-                );
-
-            }
-
-            else if (group.type === "special") {
-
-                button.classList.add(
-                    "keyboard-special"
-                );
-
-            }
-
-            else if (group.type === "punctuation") {
-
-                button.classList.add(
-                    "keyboard-punctuation"
-                );
-
-            }
-
-
             button.textContent =
                 character;
-
-            button.title =
-                `Insert ${character}`;
-
 
             button.addEventListener(
                 "click",
                 () => {
 
-                    insertKeyboardText(
+                    insertTextAtCursor(
                         character
                     );
 
                 }
             );
 
-
-            keyboardKeys.appendChild(
+            rowElement.appendChild(
                 button
             );
 
         });
 
+        keyboardKeys.appendChild(
+            rowElement
+        );
+
     });
 
+    if (keyboardTitle) {
+
+        keyboardTitle.textContent =
+            `${getLanguageName(lang)} Keyboard`;
+
+    }
+
+    if (keyboardSubtitle) {
+
+        keyboardSubtitle.textContent =
+            "Click characters to insert them";
+
+    }
+
+    if (keyboardModeInfo) {
+
+        keyboardModeInfo.textContent =
+            `Type directly in ${getLanguageName(lang)} using the virtual keyboard.`;
+
+    }
 }
 
 
 /* =========================================================
-   INSERT TEXT
+   INSERT TEXT AT CURSOR
 ========================================================= */
 
-function insertKeyboardText(text) {
+function insertTextAtCursor(text) {
 
     const start =
         inputText.selectionStart;
@@ -1736,674 +582,33 @@ function insertKeyboardText(text) {
     const end =
         inputText.selectionEnd;
 
-    const value =
+    const current =
         inputText.value;
 
-
-    const newValue =
-        value.substring(0, start)
+    inputText.value =
+        current.substring(0, start)
         +
         text
         +
-        value.substring(end);
+        current.substring(end);
 
-
-    
-
-
-    inputText.value =
-        newValue;
-
-
-    const newPosition =
+    const position =
         start + text.length;
 
-
     inputText.selectionStart =
-        newPosition;
+        position;
 
     inputText.selectionEnd =
-        newPosition;
-
-
-    updateCharacterCount();
+        position;
 
     inputText.focus();
 
-}
-
-
-/* =========================================================
-   BACKSPACE
-========================================================= */
-
-function keyboardBackspace() {
-
-    const start =
-        inputText.selectionStart;
-
-    const end =
-        inputText.selectionEnd;
-
-    const value =
-        inputText.value;
-
-
-    if (start === 0 && end === 0) {
-        return;
-    }
-
-
-    if (start !== end) {
-
-        inputText.value =
-            value.substring(0, start)
-            +
-            value.substring(end);
-
-        inputText.selectionStart =
-            start;
-
-        inputText.selectionEnd =
-            start;
-
-    }
-
-    else {
-
-        /*
-           Array.from handles Unicode
-           characters better than simple
-           substring for Indian scripts.
-        */
-
-        const characters =
-            Array.from(value);
-
-
-        const deletePosition =
-            Array.from(
-                value.substring(0, start)
-            ).length;
-
-
-        characters.splice(
-            deletePosition - 1,
-            1
-        );
-
-
-        inputText.value =
-            characters.join("");
-
-
-        const newPosition =
-            Math.max(
-                0,
-                deletePosition - 1
-            );
-
-
-        /*
-           Recalculate cursor position.
-        */
-
-        let cursor = 0;
-
-        const before =
-            characters
-                .slice(0, newPosition)
-                .join("");
-
-
-        cursor =
-            before.length;
-
-
-        inputText.selectionStart =
-            cursor;
-
-        inputText.selectionEnd =
-            cursor;
-
-    }
-
-
     updateCharacterCount();
-
-    inputText.focus();
-
-}
-
-// =========================================================
-// VOICE INPUT
-// =========================================================
-
-const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
-
-let recognition = null;
-
-let isRecording = false;
-
-
-// ---------------------------------------------------------
-// SPEECH RECOGNITION SUPPORT
-// ---------------------------------------------------------
-
-if (SpeechRecognition) {
-
-    recognition =
-        new SpeechRecognition();
-
-    recognition.continuous = true;
-
-    recognition.interimResults = true;
-
-    recognition.maxAlternatives = 1;
-
-
-    recognition.onstart = () => {
-
-        isRecording = true;
-
-        voiceInputButton.textContent =
-            "🔴 Stop Voice";
-
-        voiceInputButton.classList.add(
-            "recording"
-        );
-
-        showMessage(
-            `Listening in ${getLanguageName(sourceLanguage.value)}...`,
-            "info"
-        );
-
-    };
-
-
-    recognition.onresult = (event) => {
-
-        let finalText = "";
-
-        let interimText = "";
-
-
-        for (
-            let i = event.resultIndex;
-            i < event.results.length;
-            i++
-        ) {
-
-            const transcript =
-                event.results[i][0].transcript;
-
-
-            if (
-                event.results[i].isFinal
-            ) {
-
-                finalText +=
-                    transcript + " ";
-
-            }
-
-            else {
-
-                interimText +=
-                    transcript;
-
-            }
-
-        }
-
-
-        if (finalText) {
-
-            insertVoiceText(
-                finalText
-            );
-
-        }
-
-    };
-
-
-    recognition.onerror = (event) => {
-
-        console.error(
-            "Voice input error:",
-            event.error
-        );
-
-
-        if (
-            event.error ===
-            "not-allowed"
-        ) {
-
-            showMessage(
-                "Microphone permission was denied. Please allow microphone access.",
-                "error"
-            );
-
-        }
-
-        else if (
-            event.error ===
-            "no-speech"
-        ) {
-
-            showMessage(
-                "No speech detected. Please try again.",
-                "error"
-            );
-
-        }
-
-        else {
-
-            showMessage(
-                "Voice input could not be started.",
-                "error"
-            );
-
-        }
-
-    };
-
-
-    recognition.onend = () => {
-
-        isRecording = false;
-
-
-        voiceInputButton.textContent =
-            "🎤 Voice Input";
-
-
-        voiceInputButton.classList.remove(
-            "recording"
-        );
-
-    };
-
 }
 
 
-// ---------------------------------------------------------
-// VOICE INPUT BUTTON
-// ---------------------------------------------------------
-
-voiceInputButton.addEventListener(
-    "click",
-    () => {
-
-        if (!recognition) {
-
-            showMessage(
-                "Voice input is not supported in this browser. Try Google Chrome or Microsoft Edge.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        if (isRecording) {
-
-            recognition.stop();
-
-            return;
-
-        }
-
-
-        // Set selected source language
-
-        recognition.lang =
-            getSpeechLanguage(
-                sourceLanguage.value
-            );
-
-
-        try {
-
-            recognition.start();
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-        }
-
-    }
-);
-
-
-// ---------------------------------------------------------
-// INSERT VOICE TEXT
-// ---------------------------------------------------------
-
-function insertVoiceText(text) {
-
-    const start =
-        inputText.selectionStart;
-
-    const end =
-        inputText.selectionEnd;
-
-
-    const currentText =
-        inputText.value;
-
-
-    const before =
-        currentText.substring(
-            0,
-            start
-        );
-
-
-    const after =
-        currentText.substring(
-            end
-        );
-
-
-    inputText.value =
-        before +
-        text +
-        after;
-
-
-    const newPosition =
-        start + text.length;
-
-
-    inputText.selectionStart =
-        newPosition;
-
-    inputText.selectionEnd =
-        newPosition;
-
-
-    inputText.focus();
-
-
-    updateCharacterCount();
-
-}
-
-
-// =========================================================
-// READ INPUT ALOUD
-// =========================================================
-
-readInputButton.addEventListener(
-    "click",
-    () => {
-
-        const text =
-            inputText.value.trim();
-
-
-        if (!text) {
-
-            showMessage(
-                "There is no input text to read.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        if (
-            !window.speechSynthesis
-        ) {
-
-            showMessage(
-                "Text-to-speech is not supported in this browser.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        // Stop currently playing speech
-
-        window.speechSynthesis.cancel();
-
-
-        const voices =
-            window.speechSynthesis
-                .getVoices();
-
-
-        const language =
-            getSpeechLanguage(
-                sourceLanguage.value
-            );
-
-
-        const prefix =
-            language
-                .split("-")[0];
-
-
-        let voice =
-            voices.find(
-                voice =>
-                    voice.lang
-                        .toLowerCase()
-                    ===
-                    language
-                        .toLowerCase()
-            );
-
-
-        // Try language family
-
-        if (!voice) {
-
-            voice =
-                voices.find(
-                    voice =>
-                        voice.lang
-                            .toLowerCase()
-                            .startsWith(
-                                prefix.toLowerCase()
-                            )
-                );
-
-        }
-
-
-        if (!voice) {
-
-            showMessage(
-                `${getLanguageName(sourceLanguage.value)} voice is not available on this device.`,
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        const speech =
-            new SpeechSynthesisUtterance(
-                text
-            );
-
-
-        speech.voice =
-            voice;
-
-
-        speech.lang =
-            language;
-
-
-        speech.rate =
-            0.9;
-
-
-        speech.pitch =
-            1;
-
-
-        speech.onstart = () => {
-
-            readInputButton.textContent =
-                "⏹ Stop Reading";
-
-            readInputButton.classList.add(
-                "speaking"
-            );
-
-        };
-
-
-        speech.onend = () => {
-
-            readInputButton.textContent =
-                "🔊 Read Input";
-
-            readInputButton.classList.remove(
-                "speaking"
-            );
-
-        };
-
-
-        speech.onerror = () => {
-
-            readInputButton.textContent =
-                "🔊 Read Input";
-
-            readInputButton.classList.remove(
-                "speaking"
-            );
-
-        };
-
-
-        window.speechSynthesis.speak(
-            speech
-        );
-
-    }
-);
-
-
-// =========================================================
-// STOP READING WHEN BUTTON IS CLICKED AGAIN
-// =========================================================
-
-readInputButton.addEventListener(
-    "dblclick",
-    () => {
-
-        window.speechSynthesis.cancel();
-
-        readInputButton.textContent =
-            "🔊 Read Input";
-
-        readInputButton.classList.remove(
-            "speaking"
-        );
-
-    }
-);
-
-
 /* =========================================================
-   KEYBOARD CLEAR
-========================================================= */
-
-keyboardClearButton.addEventListener(
-    "click",
-    () => {
-
-        inputText.value = "";
-
-        updateCharacterCount();
-
-        inputText.focus();
-
-    }
-);
-
-
-/* =========================================================
-   KEYBOARD SPACE
-========================================================= */
-
-keyboardSpaceButton.addEventListener(
-    "click",
-    () => {
-
-        insertKeyboardText(" ");
-
-    }
-);
-
-
-/* =========================================================
-   KEYBOARD BACKSPACE
-========================================================= */
-
-keyboardBackspaceButton.addEventListener(
-    "click",
-    keyboardBackspace
-);
-
-
-/* =========================================================
-   UPDATE INPUT LANGUAGE
-========================================================= */
-
-sourceLanguage.addEventListener(
-    "change",
-    updateInputLanguage
-);
-
-
-function updateInputLanguage() {
-
-    const language =
-        sourceLanguage.value;
-
-    const name =
-        languageNames[language];
-
-    inputLanguageTitle.textContent =
-        `${name} input`;
-
-    inputLanguageDescription.textContent =
-        `Type or paste text in ${name}`;
-
-    keyboardTitle.textContent =
-        `${name} Keyboard`;
-
-    inputText.placeholder =
-        inputPlaceholders[language] ||
-        "Type here...";
-
-    createKeyboard(language);
-}
-
-/* =========================================================
-   KEYBOARD OPEN / CLOSE
+   KEYBOARD BUTTON
 ========================================================= */
 
 keyboardToggle.addEventListener(
@@ -2414,13 +619,9 @@ keyboardToggle.addEventListener(
             "hidden"
         );
 
-        if (
-            !virtualKeyboard.classList.contains(
-                "hidden"
-            )
-        ) {
+        if (!virtualKeyboard.classList.contains("hidden")) {
 
-            inputText.focus();
+            renderKeyboard();
 
         }
 
@@ -2441,25 +642,149 @@ closeKeyboard.addEventListener(
 
 
 /* =========================================================
-   CHARACTER COUNT
+   KEYBOARD ACTIONS
 ========================================================= */
 
-function updateCharacterCount() {
+keyboardClearButton.addEventListener(
+    "click",
+    () => {
 
-    charCount.textContent =
-        `${inputText.value.length} characters`;
+        inputText.value = "";
 
-}
+        updateCharacterCount();
+
+        inputText.focus();
+
+    }
+);
 
 
-inputText.addEventListener(
-    "input",
-    updateCharacterCount
+keyboardSpaceButton.addEventListener(
+    "click",
+    () => {
+
+        insertTextAtCursor(" ");
+
+    }
+);
+
+
+keyboardBackspaceButton.addEventListener(
+    "click",
+    () => {
+
+        const start =
+            inputText.selectionStart;
+
+        const end =
+            inputText.selectionEnd;
+
+        if (start !== end) {
+
+            inputText.value =
+                inputText.value.substring(0, start)
+                +
+                inputText.value.substring(end);
+
+            inputText.selectionStart =
+                start;
+
+            inputText.selectionEnd =
+                start;
+
+        }
+
+        else if (start > 0) {
+
+            inputText.value =
+                inputText.value.substring(0, start - 1)
+                +
+                inputText.value.substring(start);
+
+            inputText.selectionStart =
+                start - 1;
+
+            inputText.selectionEnd =
+                start - 1;
+
+        }
+
+        updateCharacterCount();
+
+        inputText.focus();
+
+    }
 );
 
 
 /* =========================================================
-   TRANSLATE
+   LANGUAGE CHANGE
+========================================================= */
+
+sourceLanguage.addEventListener(
+    "change",
+    () => {
+
+        updateInputLanguageInfo();
+
+        renderKeyboard();
+
+        stopVoiceInput();
+
+    }
+);
+
+
+targetLanguage.addEventListener(
+    "change",
+    () => {
+
+        stopSpeaking();
+
+    }
+);
+
+
+/* =========================================================
+   SWAP LANGUAGES
+========================================================= */
+
+swapButton.addEventListener(
+    "click",
+    () => {
+
+        const oldSource =
+            sourceLanguage.value;
+
+        sourceLanguage.value =
+            targetLanguage.value;
+
+        targetLanguage.value =
+            oldSource;
+
+        const oldInput =
+            inputText.value;
+
+        inputText.value =
+            outputText.value;
+
+        outputText.value =
+            oldInput;
+
+        updateInputLanguageInfo();
+
+        renderKeyboard();
+
+        updateCharacterCount();
+
+        stopVoiceInput();
+
+    }
+);
+
+
+/* =========================================================
+   TRANSLATION
 ========================================================= */
 
 translateButton.addEventListener(
@@ -2475,7 +800,6 @@ translateButton.addEventListener(
         const target =
             targetLanguage.value;
 
-
         if (!text) {
 
             showMessage(
@@ -2483,9 +807,10 @@ translateButton.addEventListener(
                 "error"
             );
 
+            inputText.focus();
+
             return;
         }
-
 
         if (source === target) {
 
@@ -2495,13 +820,6 @@ translateButton.addEventListener(
             translationStatus.textContent =
                 "✓ Same language";
 
-
-            showMessage(
-                "Source and target languages are the same.",
-                "info"
-            );
-
-
             saveHistory(
                 text,
                 text,
@@ -2509,25 +827,25 @@ translateButton.addEventListener(
                 target
             );
 
-
             renderHistory();
+
+            showMessage(
+                "Source and target languages are the same.",
+                "info"
+            );
 
             return;
         }
-
 
         loading.classList.remove(
             "hidden"
         );
 
-
         translateButton.disabled =
             true;
 
-
         translationStatus.textContent =
             "Translating...";
-
 
         try {
 
@@ -2535,100 +853,88 @@ translateButton.addEventListener(
                 await fetch(
                     "/translate",
                     {
-
-                        method:
-                            "POST",
+                        method: "POST",
 
                         headers: {
-
                             "Content-Type":
                                 "application/json"
-
                         },
 
-                        body:
-                            JSON.stringify({
-
-                                text:
-                                    text,
-
-                                source:
-                                    source,
-
-                                target:
-                                    target
-
-                            })
-
+                        body: JSON.stringify({
+                            text: text,
+                            source: source,
+                            target: target
+                        })
                     }
                 );
 
+            let data;
 
-            const data =
-                await response.json();
+            try {
 
-
-            if (data.success) {
-
-                outputText.value =
-                    data.translation;
-
-
-                translationStatus.textContent =
-                    "✓ Translation completed";
-
-
-                showMessage(
-                    "Translation completed successfully!",
-                    "success"
-                );
-
-
-                saveHistory(
-                    text,
-                    data.translation,
-                    source,
-                    target
-                );
-
-
-                renderHistory();
+                data =
+                    await response.json();
 
             }
 
-            else {
+            catch (jsonError) {
 
-                outputText.value =
-                    "";
+                throw new Error(
+                    "Invalid response from translation server."
+                );
 
-                translationStatus.textContent =
-                    "Translation failed";
+            }
 
+            if (!response.ok || !data.success) {
 
-                showMessage(
+                throw new Error(
                     data.message
                     ||
-                    "Translation failed.",
-                    "error"
+                    "Translation failed."
                 );
 
             }
+
+            outputText.value =
+                data.translation;
+
+            translationStatus.textContent =
+                `✓ Translation completed`;
+
+            saveHistory(
+                text,
+                data.translation,
+                source,
+                target
+            );
+
+            renderHistory();
+
+            showMessage(
+                `Translation completed using ${data.provider || "translation service"}.`,
+                "success"
+            );
 
         }
 
         catch (error) {
 
-            console.error(error);
-
-
-            showMessage(
-                "Unable to connect to the translation server.",
-                "error"
+            console.error(
+                "Translation error:",
+                error
             );
 
+            outputText.value = "";
 
             translationStatus.textContent =
-                "Server connection failed";
+                "Translation failed";
+
+            showMessage(
+                error.message
+                ||
+                "Unable to connect to the translation service.",
+                "error"
+            );
 
         }
 
@@ -2637,7 +943,6 @@ translateButton.addEventListener(
             loading.classList.add(
                 "hidden"
             );
-
 
             translateButton.disabled =
                 false;
@@ -2649,7 +954,7 @@ translateButton.addEventListener(
 
 
 /* =========================================================
-   COPY
+   COPY TRANSLATION
 ========================================================= */
 
 copyButton.addEventListener(
@@ -2658,7 +963,6 @@ copyButton.addEventListener(
 
         const text =
             outputText.value.trim();
-
 
         if (!text) {
 
@@ -2670,12 +974,11 @@ copyButton.addEventListener(
             return;
         }
 
-
         try {
 
-            await navigator.clipboard
-                .writeText(text);
-
+            await navigator.clipboard.writeText(
+                text
+            );
 
             showMessage(
                 "Translation copied!",
@@ -2684,12 +987,7 @@ copyButton.addEventListener(
 
         }
 
-        catch {
-
-            /*
-               Fallback for browsers that
-               block clipboard API.
-            */
+        catch (error) {
 
             outputText.select();
 
@@ -2709,271 +1007,7 @@ copyButton.addEventListener(
 
 
 /* =========================================================
-   TEXT TO SPEECH
-========================================================= */
-
-speakButton.addEventListener(
-    "click",
-    () => {
-
-        const text =
-            outputText.value.trim();
-
-
-        if (!text) {
-
-            showMessage(
-                "There is no translation to listen to.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        if (!window.speechSynthesis) {
-
-            showMessage(
-                "Text-to-speech is not supported.",
-                "error"
-            );
-
-            return;
-        }
-
-
-        window.speechSynthesis.cancel();
-
-
-        const language =
-            getSpeechLanguage(
-                targetLanguage.value
-            );
-
-
-        const voices =
-            window.speechSynthesis
-                .getVoices();
-
-
-        speakWithBestVoice(
-            text,
-            language,
-            voices
-        );
-
-    }
-);
-
-
-/* =========================================================
-   SPEECH VOICES
-========================================================= */
-
-function speakWithBestVoice(
-    text,
-    language,
-    voices
-) {
-
-    const prefix =
-        language
-            .split("-")[0]
-            .toLowerCase();
-
-
-    let voice =
-        voices.find(
-            voice =>
-                voice.lang.toLowerCase()
-                ===
-                language.toLowerCase()
-        );
-
-
-    if (!voice) {
-
-        voice =
-            voices.find(
-                voice =>
-                    voice.lang
-                        .toLowerCase()
-                        .startsWith(prefix)
-            );
-
-    }
-
-
-    /*
-       If the browser has not loaded
-       voices yet, wait for them.
-    */
-
-    if (!voice && voices.length === 0) {
-
-        window.speechSynthesis.onvoiceschanged =
-            () => {
-
-                const updatedVoices =
-                    window.speechSynthesis
-                        .getVoices();
-
-
-                speakWithBestVoice(
-                    text,
-                    language,
-                    updatedVoices
-                );
-
-            };
-
-
-        return;
-    }
-
-
-    if (!voice) {
-
-        showMessage(
-            `${getLanguageName(targetLanguage.value)} voice is not available on this device.`,
-            "error"
-        );
-
-        return;
-    }
-
-
-    const speech =
-        new SpeechSynthesisUtterance(
-            text
-        );
-
-
-    speech.voice =
-        voice;
-
-
-    speech.lang =
-        language;
-
-
-    speech.rate =
-        0.9;
-
-
-    speech.pitch =
-        1;
-
-
-    speech.volume =
-        1;
-
-
-    speech.onstart =
-        () => {
-
-            showMessage(
-                "Playing translation...",
-                "info"
-            );
-
-        };
-
-
-    speech.onend =
-        () => {
-
-            translationStatus.textContent =
-                "✓ Translation completed";
-
-        };
-
-
-    speech.onerror =
-        () => {
-
-            showMessage(
-                "Unable to play this language voice on your device.",
-                "error"
-            );
-
-        };
-
-
-    window.speechSynthesis.speak(
-        speech
-    );
-
-}
-
-
-/* =========================================================
-   SPEECH LANGUAGE MAP
-========================================================= */
-
-function getSpeechLanguage(
-    language
-) {
-
-    const map = {
-
-        en:
-            "en-IN",
-
-        hi:
-            "hi-IN",
-
-        kn:
-            "kn-IN",
-
-        te:
-            "te-IN",
-
-        ta:
-            "ta-IN",
-
-        ml:
-            "ml-IN",
-
-        mr:
-            "mr-IN",
-
-        fr:
-            "fr-FR",
-
-        de:
-            "de-DE",
-
-        es:
-            "es-ES",
-
-        it:
-            "it-IT",
-
-        pt:
-            "pt-PT",
-
-        ja:
-            "ja-JP",
-
-        ko:
-            "ko-KR",
-
-        zh:
-            "zh-CN"
-
-    };
-
-
-    return map[language]
-        ||
-        "en-IN";
-
-}
-
-
-/* =========================================================
-   CLEAR
+   CLEAR INPUT
 ========================================================= */
 
 clearButton.addEventListener(
@@ -2984,37 +1018,755 @@ clearButton.addEventListener(
 
 clearInputButton.addEventListener(
     "click",
-    () => {
-
-        inputText.value =
-            "";
-
-        updateCharacterCount();
-
-        inputText.focus();
-
-    }
+    clearAll
 );
 
 
 function clearAll() {
 
-    inputText.value =
-        "";
+    inputText.value = "";
 
-    outputText.value =
-        "";
+    outputText.value = "";
 
     updateCharacterCount();
-
 
     translationStatus.textContent =
         "Waiting for translation";
 
+    inputText.focus();
 
-    message.textContent =
-        "";
+}
 
+
+/* =========================================================
+   SPEECH RECOGNITION
+   FIXED VERSION
+========================================================= */
+
+const SpeechRecognition =
+    window.SpeechRecognition
+    ||
+    window.webkitSpeechRecognition;
+
+let recognition = null;
+
+let isRecording = false;
+
+let recognitionStarting = false;
+
+
+/* ---------------------------------------------------------
+   CHECK SUPPORT
+--------------------------------------------------------- */
+
+function speechRecognitionSupported() {
+
+    return !!SpeechRecognition;
+}
+
+
+/* ---------------------------------------------------------
+   CREATE RECOGNITION
+--------------------------------------------------------- */
+
+function createRecognition() {
+
+    if (!speechRecognitionSupported()) {
+
+        return null;
+
+    }
+
+    const recognizer =
+        new SpeechRecognition();
+
+    /*
+       IMPORTANT:
+       continuous=false is more reliable in
+       Chrome/Edge than continuous=true.
+    */
+
+    recognizer.continuous =
+        false;
+
+    recognizer.interimResults =
+        false;
+
+    recognizer.maxAlternatives =
+        1;
+
+    recognizer.lang =
+        getSpeechLanguage(
+            sourceLanguage.value
+        );
+
+    recognizer.onstart =
+        () => {
+
+            isRecording =
+                true;
+
+            recognitionStarting =
+                false;
+
+            voiceInputButton.textContent =
+                "🔴 Stop Voice";
+
+            voiceInputButton.classList.add(
+                "recording"
+            );
+
+            showMessage(
+                `Listening in ${getLanguageName(sourceLanguage.value)}... Speak now.`,
+                "info"
+            );
+
+        };
+
+
+    recognizer.onresult =
+        (event) => {
+
+            if (
+                !event.results ||
+                !event.results.length
+            ) {
+
+                return;
+
+            }
+
+            const result =
+                event.results[
+                    event.results.length - 1
+                ];
+
+            if (!result || !result[0]) {
+
+                return;
+
+            }
+
+            const transcript =
+                result[0].transcript.trim();
+
+            if (transcript) {
+
+                insertVoiceText(
+                    transcript + " "
+                );
+
+                showMessage(
+                    "Voice input received.",
+                    "success"
+                );
+
+            }
+
+        };
+
+
+    recognizer.onerror =
+        (event) => {
+
+            console.error(
+                "Speech recognition error:",
+                event.error
+            );
+
+            recognitionStarting =
+                false;
+
+            isRecording =
+                false;
+
+            resetVoiceButton();
+
+            let message =
+                "Voice input could not be started.";
+
+            switch (event.error) {
+
+                case "not-allowed":
+
+                case "service-not-allowed":
+
+                    message =
+                        "Microphone permission was denied. Click the 🔒 icon near the website address and allow Microphone access.";
+
+                    break;
+
+
+                case "no-speech":
+
+                    message =
+                        "No speech detected. Please speak clearly and try again.";
+
+                    break;
+
+
+                case "audio-capture":
+
+                    message =
+                        "No microphone was detected. Check your microphone connection and Windows microphone permissions.";
+
+                    break;
+
+
+                case "network":
+
+                    message =
+                        "Speech recognition needs an internet connection. Check your connection and try again.";
+
+                    break;
+
+
+                case "aborted":
+
+                    message =
+                        "Voice input stopped.";
+
+                    break;
+
+            }
+
+            showMessage(
+                message,
+                "error"
+            );
+
+        };
+
+
+    recognizer.onend =
+        () => {
+
+            isRecording =
+                false;
+
+            recognitionStarting =
+                false;
+
+            resetVoiceButton();
+
+        };
+
+    return recognizer;
+}
+
+
+/* ---------------------------------------------------------
+   RESET VOICE BUTTON
+--------------------------------------------------------- */
+
+function resetVoiceButton() {
+
+    voiceInputButton.textContent =
+        "🎤 Voice Input";
+
+    voiceInputButton.classList.remove(
+        "recording"
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   START VOICE INPUT
+--------------------------------------------------------- */
+
+function startVoiceInput() {
+
+    if (!speechRecognitionSupported()) {
+
+        showMessage(
+            "Voice input is not supported by this browser. Use the latest Google Chrome or Microsoft Edge.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    if (isRecording || recognitionStarting) {
+
+        return;
+
+    }
+
+    recognition =
+        createRecognition();
+
+    if (!recognition) {
+
+        showMessage(
+            "Unable to initialize voice input.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    recognition.lang =
+        getSpeechLanguage(
+            sourceLanguage.value
+        );
+
+    recognitionStarting =
+        true;
+
+    try {
+
+        recognition.start();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Recognition start error:",
+            error
+        );
+
+        recognitionStarting =
+            false;
+
+        isRecording =
+            false;
+
+        resetVoiceButton();
+
+        showMessage(
+            "Voice input is already starting or the browser blocked it. Please try again.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* ---------------------------------------------------------
+   STOP VOICE INPUT
+--------------------------------------------------------- */
+
+function stopVoiceInput() {
+
+    if (recognition) {
+
+        try {
+
+            recognition.stop();
+
+        }
+
+        catch (error) {
+
+            console.log(
+                "Recognition already stopped."
+            );
+
+        }
+
+    }
+
+    isRecording =
+        false;
+
+    recognitionStarting =
+        false;
+
+    resetVoiceButton();
+
+}
+
+
+/* ---------------------------------------------------------
+   VOICE BUTTON
+--------------------------------------------------------- */
+
+voiceInputButton.addEventListener(
+    "click",
+    () => {
+
+        if (isRecording) {
+
+            stopVoiceInput();
+
+        }
+
+        else {
+
+            startVoiceInput();
+
+        }
+
+    }
+);
+
+
+/* ---------------------------------------------------------
+   INSERT VOICE TEXT
+--------------------------------------------------------- */
+
+function insertVoiceText(text) {
+
+    const start =
+        inputText.selectionStart;
+
+    const end =
+        inputText.selectionEnd;
+
+    const currentText =
+        inputText.value;
+
+    inputText.value =
+        currentText.substring(0, start)
+        +
+        text
+        +
+        currentText.substring(end);
+
+    const newPosition =
+        start + text.length;
+
+    inputText.selectionStart =
+        newPosition;
+
+    inputText.selectionEnd =
+        newPosition;
+
+    inputText.focus();
+
+    updateCharacterCount();
+
+}
+
+
+/* =========================================================
+   TEXT TO SPEECH
+========================================================= */
+
+function getVoices() {
+
+    if (
+        !window.speechSynthesis
+    ) {
+
+        return [];
+
+    }
+
+    return window.speechSynthesis.getVoices();
+}
+
+
+/* ---------------------------------------------------------
+   FIND BEST VOICE
+--------------------------------------------------------- */
+
+function findBestVoice(
+    voices,
+    language
+) {
+
+    const wanted =
+        language.toLowerCase();
+
+    const prefix =
+        wanted.split("-")[0];
+
+    let voice =
+        voices.find(
+            v =>
+                v.lang
+                &&
+                v.lang.toLowerCase()
+                === wanted
+        );
+
+    if (voice) {
+        return voice;
+    }
+
+    voice =
+        voices.find(
+            v =>
+                v.lang
+                &&
+                v.lang.toLowerCase()
+                .startsWith(prefix)
+        );
+
+    return voice || null;
+}
+
+
+/* ---------------------------------------------------------
+   SPEAK TEXT
+--------------------------------------------------------- */
+
+function speakText(
+    text,
+    language,
+    button
+) {
+
+    if (
+        !window.speechSynthesis
+    ) {
+
+        showMessage(
+            "Text-to-speech is not supported in this browser.",
+            "error"
+        );
+
+        return;
+
+    }
+
+    window.speechSynthesis.cancel();
+
+    let voices =
+        getVoices();
+
+    const voice =
+        findBestVoice(
+            voices,
+            language
+        );
+
+    /*
+       Some browsers load voices asynchronously.
+    */
+
+    if (!voice && voices.length === 0) {
+
+        window.speechSynthesis.onvoiceschanged =
+            () => {
+
+                const newVoices =
+                    getVoices();
+
+                const newVoice =
+                    findBestVoice(
+                        newVoices,
+                        language
+                    );
+
+                if (newVoice) {
+
+                    speakTextWithVoice(
+                        text,
+                        language,
+                        newVoice,
+                        button
+                    );
+
+                }
+
+                else {
+
+                    showMessage(
+                        "A voice for this language is not installed on this device.",
+                        "error"
+                    );
+
+                }
+
+            };
+
+        return;
+
+    }
+
+    if (!voice) {
+
+        showMessage(
+            `${getLanguageName(
+                sourceLanguage.value
+            )} voice is not available on this device.`,
+            "error"
+        );
+
+        return;
+
+    }
+
+    speakTextWithVoice(
+        text,
+        language,
+        voice,
+        button
+    );
+
+}
+
+
+/* ---------------------------------------------------------
+   SPEAK WITH VOICE
+--------------------------------------------------------- */
+
+function speakTextWithVoice(
+    text,
+    language,
+    voice,
+    button
+) {
+
+    const speech =
+        new SpeechSynthesisUtterance(
+            text
+        );
+
+    speech.voice =
+        voice;
+
+    speech.lang =
+        language;
+
+    speech.rate =
+        0.9;
+
+    speech.pitch =
+        1;
+
+    speech.volume =
+        1;
+
+
+    speech.onstart =
+        () => {
+
+            if (button) {
+
+                button.classList.add(
+                    "speaking"
+                );
+
+            }
+
+        };
+
+
+    speech.onend =
+        () => {
+
+            if (button) {
+
+                button.classList.remove(
+                    "speaking"
+                );
+
+            }
+
+        };
+
+
+    speech.onerror =
+        (event) => {
+
+            console.error(
+                "Speech synthesis error:",
+                event
+            );
+
+            if (button) {
+
+                button.classList.remove(
+                    "speaking"
+                );
+
+            }
+
+            showMessage(
+                "Unable to play this language voice on your device.",
+                "error"
+            );
+
+        };
+
+    window.speechSynthesis.speak(
+        speech
+    );
+
+}
+
+
+/* =========================================================
+   READ INPUT
+========================================================= */
+
+readInputButton.addEventListener(
+    "click",
+    () => {
+
+        const text =
+            inputText.value.trim();
+
+        if (!text) {
+
+            showMessage(
+                "There is no input text to read.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        speakText(
+            text,
+            getSpeechLanguage(
+                sourceLanguage.value
+            ),
+            readInputButton
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SPEAK TRANSLATION
+========================================================= */
+
+speakButton.addEventListener(
+    "click",
+    () => {
+
+        const text =
+            outputText.value.trim();
+
+        if (!text) {
+
+            showMessage(
+                "There is no translation to listen to.",
+                "error"
+            );
+
+            return;
+
+        }
+
+        speakText(
+            text,
+            getSpeechLanguage(
+                targetLanguage.value
+            ),
+            speakButton
+        );
+
+    }
+);
+
+
+/* =========================================================
+   STOP SPEAKING
+========================================================= */
+
+function stopSpeaking() {
 
     if (
         window.speechSynthesis
@@ -3028,55 +1780,12 @@ function clearAll() {
 
 
 /* =========================================================
-   SWAP
-========================================================= */
-
-swapButton.addEventListener(
-    "click",
-    () => {
-
-        const oldSource =
-            sourceLanguage.value;
-
-
-        sourceLanguage.value =
-            targetLanguage.value;
-
-
-        targetLanguage.value =
-            oldSource;
-
-
-        const oldInput =
-            inputText.value;
-
-
-        inputText.value =
-            outputText.value;
-
-
-        outputText.value =
-            oldInput;
-
-
-        updateInputLanguage();
-
-
-        updateCharacterCount();
-
-
-        showMessage(
-            `${getLanguageName(sourceLanguage.value)} → ${getLanguageName(targetLanguage.value)}`,
-            "info"
-        );
-
-    }
-);
-
-
-/* =========================================================
    HISTORY
 ========================================================= */
+
+const HISTORY_KEY =
+    "langai_translation_history";
+
 
 function getHistory() {
 
@@ -3084,15 +1793,14 @@ function getHistory() {
 
         return JSON.parse(
             localStorage.getItem(
-                "linguaAIHistory"
+                HISTORY_KEY
             )
         )
-        ||
-        [];
+        || [];
 
     }
 
-    catch {
+    catch (error) {
 
         return [];
 
@@ -3102,222 +1810,214 @@ function getHistory() {
 
 
 function saveHistory(
-    sourceText,
-    translatedText,
+    original,
+    translated,
     source,
     target
 ) {
 
-    let history =
+    const history =
         getHistory();
-
 
     history.unshift({
 
-        id:
-            Date.now(),
+        original:
+            original,
 
-        sourceText,
+        translated:
+            translated,
 
-        translatedText,
+        source:
+            source,
 
-        source,
+        target:
+            target,
 
-        target,
-
-        time:
-            new Date()
-                .toLocaleString()
+        date:
+            new Date().toLocaleString()
 
     });
 
-
     /*
-       Keep maximum 50 records.
+       Keep only the latest 50 translations.
     */
 
-    history =
-        history.slice(
-            0,
-            50
-        );
-
+    const limited =
+        history.slice(0, 50);
 
     localStorage.setItem(
-        "linguaAIHistory",
-        JSON.stringify(history)
+        HISTORY_KEY,
+        JSON.stringify(limited)
     );
 
 }
 
 
-/* =========================================================
-   RENDER HISTORY
-========================================================= */
-
 function renderHistory() {
+
+    if (!historyList) {
+        return;
+    }
 
     const history =
         getHistory();
 
+    historyList.innerHTML = "";
 
-    const search =
-        historySearch.value
-            .toLowerCase()
-            .trim();
+    if (historyBadge) {
 
+        historyBadge.textContent =
+            history.length;
 
-    const filtered =
-        history.filter(
-            item =>
+    }
 
-                item.sourceText
-                    .toLowerCase()
-                    .includes(search)
+    if (!history.length) {
 
-                ||
+        if (emptyHistory) {
 
-                item.translatedText
-                    .toLowerCase()
-                    .includes(search)
-        );
+            emptyHistory.classList.remove(
+                "hidden"
+            );
 
-
-    historyList.innerHTML =
-        "";
-
-
-    historyBadge.textContent =
-        history.length;
-
-
-    if (!filtered.length) {
-
-        emptyHistory.classList.remove(
-            "hidden"
-        );
+        }
 
         return;
 
     }
 
+    if (emptyHistory) {
 
-    emptyHistory.classList.add(
-        "hidden"
-    );
+        emptyHistory.classList.add(
+            "hidden"
+        );
 
+    }
 
-    filtered.forEach(
-        item => {
+    history.forEach(
+        (item, index) => {
 
-            const div =
+            const card =
                 document.createElement(
                     "div"
                 );
 
-
-            div.className =
+            card.className =
                 "history-item";
 
+            card.innerHTML = `
 
-            div.innerHTML = `
+                <div class="history-item-header">
 
-                <div class="history-top">
-
-                    <span class="history-languages">
-
-                        ${escapeHTML(
-                            getLanguageName(item.source)
+                    <span>
+                        ${escapeHtml(
+                            getLanguageName(
+                                item.source
+                            )
                         )}
-
                         →
-
-                        ${escapeHTML(
-                            getLanguageName(item.target)
+                        ${escapeHtml(
+                            getLanguageName(
+                                item.target
+                            )
                         )}
-
                     </span>
 
-                    <span class="history-time">
-
-                        ${escapeHTML(item.time)}
-
-                    </span>
-
-                </div>
-
-
-                <div class="history-text">
-
-                    <div class="history-source">
-
-                        ${escapeHTML(
-                            item.sourceText
+                    <small>
+                        ${escapeHtml(
+                            item.date || ""
                         )}
-
-                    </div>
-
-
-                    <div class="history-result">
-
-                        ${escapeHTML(
-                            item.translatedText
-                        )}
-
-                    </div>
+                    </small>
 
                 </div>
 
-
-                <div class="history-actions">
-
-                    <button
-                        class="delete-history"
-                        onclick="deleteHistory(${item.id})">
-
-                        🗑 Delete
-
-                    </button>
-
+                <div class="history-original">
+                    ${escapeHtml(
+                        item.original
+                    )}
                 </div>
+
+                <div class="history-translated">
+                    ${escapeHtml(
+                        item.translated
+                    )}
+                </div>
+
+                <button
+                    type="button"
+                    class="history-use"
+                    data-index="${index}">
+                    Use Translation
+                </button>
 
             `;
 
-
             historyList.appendChild(
-                div
+                card
             );
 
         }
     );
 
+    document
+        .querySelectorAll(
+            ".history-use"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        const index =
+                            Number(
+                                button.dataset.index
+                            );
+
+                        const item =
+                            getHistory()[index];
+
+                        if (!item) {
+                            return;
+                        }
+
+                        inputText.value =
+                            item.original;
+
+                        outputText.value =
+                            item.translated;
+
+                        sourceLanguage.value =
+                            item.source;
+
+                        targetLanguage.value =
+                            item.target;
+
+                        updateInputLanguageInfo();
+
+                        renderKeyboard();
+
+                        updateCharacterCount();
+
+                        showTranslator();
+
+                    }
+                );
+
+            }
+        );
+
 }
 
 
-/* =========================================================
-   DELETE HISTORY
-========================================================= */
+function escapeHtml(value) {
 
-function deleteHistory(id) {
-
-    let history =
-        getHistory();
-
-
-    history =
-        history.filter(
-            item =>
-                item.id !== id
-        );
-
-
-    localStorage.setItem(
-        "linguaAIHistory",
-        JSON.stringify(history)
-    );
-
-
-    renderHistory();
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#039;");
 
 }
 
@@ -3326,87 +2026,87 @@ function deleteHistory(id) {
    CLEAR HISTORY
 ========================================================= */
 
-clearHistoryButton.addEventListener(
-    "click",
-    () => {
+if (clearHistoryButton) {
 
-        if (!getHistory().length) {
+    clearHistoryButton.addEventListener(
+        "click",
+        () => {
 
-            showMessage(
-                "There is no history to clear.",
-                "info"
-            );
+            if (!getHistory().length) {
 
-            return;
-        }
+                showMessage(
+                    "History is already empty.",
+                    "info"
+                );
 
+                return;
 
-        if (
-            confirm(
-                "Delete all translation history?"
-            )
-        ) {
+            }
+
+            const confirmed =
+                confirm(
+                    "Delete all translation history?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
 
             localStorage.removeItem(
-                "linguaAIHistory"
+                HISTORY_KEY
             );
-
 
             renderHistory();
 
-        }
+            showMessage(
+                "Translation history cleared.",
+                "success"
+            );
 
-    }
-);
+        }
+    );
+
+}
 
 
 /* =========================================================
    HISTORY SEARCH
 ========================================================= */
 
-historySearch.addEventListener(
-    "input",
-    renderHistory
-);
+if (historySearch) {
 
+    historySearch.addEventListener(
+        "input",
+        () => {
 
-/* =========================================================
-   SHOW HISTORY
-========================================================= */
+            const query =
+                historySearch.value
+                    .trim()
+                    .toLowerCase();
 
-function showHistory() {
+            const items =
+                document.querySelectorAll(
+                    ".history-item"
+                );
 
-    historySection.classList.remove(
-        "hidden"
+            items.forEach(
+                item => {
+
+                    const visible =
+                        item.textContent
+                            .toLowerCase()
+                            .includes(query);
+
+                    item.style.display =
+                        visible
+                        ? ""
+                        : "none";
+
+                }
+            );
+
+        }
     );
-
-
-    document
-        .getElementById(
-            "translatorSection"
-        )
-        .classList.add(
-            "hidden"
-        );
-
-
-    historySidebarBtn.classList.add(
-        "active"
-    );
-
-
-    translatorSidebarBtn.classList.remove(
-        "active"
-    );
-
-
-    renderHistory();
-
-
-    historySection.scrollIntoView({
-        behavior:
-            "smooth"
-    });
 
 }
 
@@ -3417,125 +2117,129 @@ function showHistory() {
 
 function showTranslator() {
 
-    historySection.classList.add(
-        "hidden"
-    );
+    if (translatorSection) {
 
-
-    document
-        .getElementById(
-            "translatorSection"
-        )
-        .classList.remove(
+        translatorSection.classList.remove(
             "hidden"
         );
 
+    }
 
-    translatorSidebarBtn.classList.add(
-        "active"
-    );
+    if (historySection) {
 
-
-    historySidebarBtn.classList.remove(
-        "active"
-    );
-
-}
-
-
-/* =========================================================
-   HISTORY NAVIGATION
-========================================================= */
-
-historySidebarBtn.addEventListener(
-    "click",
-    showHistory
-);
-
-
-topHistoryButton.addEventListener(
-    "click",
-    showHistory
-);
-
-
-translatorSidebarBtn.addEventListener(
-    "click",
-    showTranslator
-);
-
-
-/* =========================================================
-   LANGUAGE HELPERS
-========================================================= */
-
-function getLanguageName(
-    language
-) {
-
-    return languageNames[language]
-        ||
-        "Unknown";
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(
-    text
-) {
-
-    const div =
-        document.createElement(
-            "div"
+        historySection.classList.add(
+            "hidden"
         );
 
+    }
 
-    div.textContent =
-        text;
+    if (translatorSidebarBtn) {
 
+        translatorSidebarBtn.classList.add(
+            "active"
+        );
 
-    return div.innerHTML;
+    }
+
+    if (historySidebarBtn) {
+
+        historySidebarBtn.classList.remove(
+            "active"
+        );
+
+    }
 
 }
 
 
 /* =========================================================
-   MESSAGE
+   SHOW HISTORY
 ========================================================= */
 
-function showMessage(
-    text,
-    type
-) {
+function showHistory() {
 
-    message.textContent =
-        text;
+    renderHistory();
 
+    if (translatorSection) {
 
-    message.className =
-        `message ${type}`;
+        translatorSection.classList.add(
+            "hidden"
+        );
+
+    }
+
+    if (historySection) {
+
+        historySection.classList.remove(
+            "hidden"
+        );
+
+    }
+
+    if (translatorSidebarBtn) {
+
+        translatorSidebarBtn.classList.remove(
+            "active"
+        );
+
+    }
+
+    if (historySidebarBtn) {
+
+        historySidebarBtn.classList.add(
+            "active"
+        );
+
+    }
 
 }
 
 
 /* =========================================================
-   ENTER KEY
+   SIDEBAR BUTTONS
+========================================================= */
+
+if (translatorSidebarBtn) {
+
+    translatorSidebarBtn.addEventListener(
+        "click",
+        showTranslator
+    );
+
+}
+
+
+if (historySidebarBtn) {
+
+    historySidebarBtn.addEventListener(
+        "click",
+        showHistory
+    );
+
+}
+
+
+if (topHistoryButton) {
+
+    topHistoryButton.addEventListener(
+        "click",
+        showHistory
+    );
+
+}
+
+
+/* =========================================================
+   KEYBOARD SHORTCUT
 ========================================================= */
 
 inputText.addEventListener(
     "keydown",
     event => {
 
-        /*
-           Ctrl + Enter translates.
-        */
-
         if (
-            event.ctrlKey &&
+            event.ctrlKey
+            &&
             event.key === "Enter"
         ) {
 
@@ -3550,18 +2254,24 @@ inputText.addEventListener(
 
 
 /* =========================================================
-   LOAD SPEECH VOICES
+   BROWSER VOICES
 ========================================================= */
 
 if (
     window.speechSynthesis
 ) {
 
+    /*
+       Force browser to initialize its
+       voice list.
+    */
+
+    window.speechSynthesis.getVoices();
+
     window.speechSynthesis.onvoiceschanged =
         () => {
 
-            window.speechSynthesis
-                .getVoices();
+            window.speechSynthesis.getVoices();
 
         };
 
@@ -3569,11 +2279,34 @@ if (
 
 
 /* =========================================================
-   STARTUP
+   INITIALIZATION
 ========================================================= */
 
-updateInputLanguage();
+updateInputLanguageInfo();
 
 updateCharacterCount();
 
+renderKeyboard();
+
 renderHistory();
+
+showTranslator();
+
+
+/* =========================================================
+   DEBUG INFORMATION
+========================================================= */
+
+console.log(
+    "LangAI loaded successfully."
+);
+
+console.log(
+    "Speech Recognition supported:",
+    speechRecognitionSupported()
+);
+
+console.log(
+    "Speech Synthesis supported:",
+    !!window.speechSynthesis
+);
