@@ -1,10 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import requests
 import os
-from urllib.parse import quote
 
 app = Flask(__name__)
 
+
+# =========================================================
+# SUPPORTED LANGUAGES
+# =========================================================
 
 SUPPORTED_LANGUAGES = {
     "en": "en",
@@ -25,12 +28,33 @@ SUPPORTED_LANGUAGES = {
 }
 
 
+# =========================================================
+# MYMEMORY EMAIL
+# =========================================================
+# Your email is used with the MyMemory API.
+#
+# You can also put MYMEMORY_EMAIL in Render Environment
+# Variables. If it is not present there, this email is used.
+# =========================================================
+
+MYMEMORY_EMAIL = os.environ.get(
+    "MYMEMORY_EMAIL",
+    "nanditadodamani17@gmail.com"
+)
+
+
+# =========================================================
+# HOME PAGE
+# =========================================================
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
+# =========================================================
+# GOOGLE TRANSLATION
+# =========================================================
 
 def google_translate(text, source, target):
     """
@@ -62,7 +86,9 @@ def google_translate(text, source, target):
     data = response.json()
 
     if not data or not data[0]:
-        raise Exception("Google translation returned no result.")
+        raise Exception(
+            "Google translation returned no result."
+        )
 
     translated_parts = []
 
@@ -73,22 +99,30 @@ def google_translate(text, source, target):
     result = "".join(translated_parts).strip()
 
     if not result:
-        raise Exception("Empty translation received.")
+        raise Exception(
+            "Empty translation received."
+        )
 
     return result
 
 
+# =========================================================
+# MYMEMORY TRANSLATION
+# =========================================================
 
 def mymemory_translate(text, source, target):
     """
-    MyMemory is used as a second translation provider.
+    MyMemory is used as the second translation provider.
+
+    Your email is sent using the 'de' parameter.
     """
 
     url = "https://api.mymemory.translated.net/get"
 
     params = {
         "q": text,
-        "langpair": f"{source}|{target}"
+        "langpair": f"{source}|{target}",
+        "de": MYMEMORY_EMAIL
     }
 
     response = requests.get(
@@ -100,13 +134,22 @@ def mymemory_translate(text, source, target):
         }
     )
 
+    # Handle HTTP errors such as 429
+    if response.status_code == 429:
+        raise Exception(
+            "MyMemory rate limit reached (HTTP 429)."
+        )
+
     response.raise_for_status()
 
     data = response.json()
 
     if data.get("responseStatus") != 200:
         raise Exception(
-            data.get("responseDetails", "MyMemory translation failed.")
+            data.get(
+                "responseDetails",
+                "MyMemory translation failed."
+            )
         )
 
     translated = (
@@ -116,16 +159,25 @@ def mymemory_translate(text, source, target):
     )
 
     if not translated:
-        raise Exception("MyMemory returned an empty translation.")
+        raise Exception(
+            "MyMemory returned an empty translation."
+        )
 
     return translated
 
 
+# =========================================================
+# TRANSLATION API
+# =========================================================
 
 @app.route("/translate", methods=["POST"])
 def translate():
 
     try:
+
+        # -------------------------------------------------
+        # READ REQUEST
+        # -------------------------------------------------
 
         data = request.get_json(silent=True)
 
@@ -135,10 +187,23 @@ def translate():
                 "message": "Invalid request."
             }), 400
 
-        text = str(data.get("text", "")).strip()
-        source = str(data.get("source", "en")).strip()
-        target = str(data.get("target", "hi")).strip()
 
+        text = str(
+            data.get("text", "")
+        ).strip()
+
+        source = str(
+            data.get("source", "en")
+        ).strip()
+
+        target = str(
+            data.get("target", "hi")
+        ).strip()
+
+
+        # -------------------------------------------------
+        # CHECK TEXT
+        # -------------------------------------------------
 
         if not text:
             return jsonify({
@@ -146,11 +211,17 @@ def translate():
                 "message": "Please enter some text to translate."
             }), 400
 
+
+        # -------------------------------------------------
+        # CHECK LANGUAGES
+        # -------------------------------------------------
+
         if source not in SUPPORTED_LANGUAGES:
             return jsonify({
                 "success": False,
                 "message": f"Unsupported source language: {source}"
             }), 400
+
 
         if target not in SUPPORTED_LANGUAGES:
             return jsonify({
@@ -159,6 +230,10 @@ def translate():
             }), 400
 
 
+        # -------------------------------------------------
+        # SAME LANGUAGE
+        # -------------------------------------------------
+
         if source == target:
             return jsonify({
                 "success": True,
@@ -166,16 +241,28 @@ def translate():
                 "provider": "same-language"
             })
 
-        source_code = SUPPORTED_LANGUAGES[source]
-        target_code = SUPPORTED_LANGUAGES[target]
 
+        # -------------------------------------------------
+        # CHARACTER LIMIT
+        # -------------------------------------------------
 
         if len(text) > 5000:
             return jsonify({
                 "success": False,
-                "message": "Please keep the text below 5000 characters."
+                "message": (
+                    "Please keep the text below "
+                    "5000 characters."
+                )
             }), 400
 
+
+        source_code = SUPPORTED_LANGUAGES[source]
+        target_code = SUPPORTED_LANGUAGES[target]
+
+
+        # =================================================
+        # PROVIDER 1 — GOOGLE
+        # =================================================
 
         try:
 
@@ -183,6 +270,10 @@ def translate():
                 text,
                 source_code,
                 target_code
+            )
+
+            print(
+                "Translation successful using Google."
             )
 
             return jsonify({
@@ -199,12 +290,20 @@ def translate():
             )
 
 
+        # =================================================
+        # PROVIDER 2 — MYMEMORY
+        # =================================================
+
         try:
 
             translated_text = mymemory_translate(
                 text,
                 source_code,
                 target_code
+            )
+
+            print(
+                "Translation successful using MyMemory."
             )
 
             return jsonify({
@@ -221,25 +320,39 @@ def translate():
             )
 
 
+        # =================================================
+        # BOTH FAILED
+        # =================================================
+
         return jsonify({
             "success": False,
             "message": (
-                "Both translation services are temporarily "
-                "unavailable. Please check your internet "
-                "connection and try again."
+                "Translation services are temporarily "
+                "unavailable. Please try again after "
+                "a few seconds."
             )
         }), 503
 
+
     except Exception as error:
 
-        print("Unexpected translation error:", str(error))
+        print(
+            "Unexpected translation error:",
+            str(error)
+        )
 
         return jsonify({
             "success": False,
-            "message": "Translation server error. Please try again."
+            "message": (
+                "Translation server error. "
+                "Please try again."
+            )
         }), 500
 
 
+# =========================================================
+# HEALTH CHECK
+# =========================================================
 
 @app.route("/health")
 def health():
@@ -251,6 +364,9 @@ def health():
     })
 
 
+# =========================================================
+# RUN APPLICATION
+# =========================================================
 
 if __name__ == "__main__":
 
