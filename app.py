@@ -5,9 +5,6 @@ from urllib.parse import quote
 
 app = Flask(__name__)
 
-# ---------------------------------------------------------
-# LANGUAGE CODE NORMALIZATION
-# ---------------------------------------------------------
 
 SUPPORTED_LANGUAGES = {
     "en": "en",
@@ -28,18 +25,12 @@ SUPPORTED_LANGUAGES = {
 }
 
 
-# ---------------------------------------------------------
-# HOME
-# ---------------------------------------------------------
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# ---------------------------------------------------------
-# GOOGLE TRANSLATE FALLBACK
-# ---------------------------------------------------------
 
 def google_translate(text, source, target):
     """
@@ -87,9 +78,6 @@ def google_translate(text, source, target):
     return result
 
 
-# ---------------------------------------------------------
-# MYMEMORY TRANSLATE FALLBACK
-# ---------------------------------------------------------
 
 def mymemory_translate(text, source, target):
     """
@@ -133,9 +121,6 @@ def mymemory_translate(text, source, target):
     return translated
 
 
-# ---------------------------------------------------------
-# TRANSLATE ROUTE
-# ---------------------------------------------------------
 
 @app.route("/translate", methods=["POST"])
 def translate():
@@ -154,9 +139,6 @@ def translate():
         source = str(data.get("source", "en")).strip()
         target = str(data.get("target", "hi")).strip()
 
-        # ---------------------------------------------
-        # VALIDATION
-        # ---------------------------------------------
 
         if not text:
             return jsonify({
@@ -176,9 +158,6 @@ def translate():
                 "message": f"Unsupported target language: {target}"
             }), 400
 
-        # ---------------------------------------------
-        # SAME LANGUAGE
-        # ---------------------------------------------
 
         if source == target:
             return jsonify({
@@ -190,9 +169,6 @@ def translate():
         source_code = SUPPORTED_LANGUAGES[source]
         target_code = SUPPORTED_LANGUAGES[target]
 
-        # ---------------------------------------------
-        # LIMIT EXTREMELY LARGE INPUT
-        # ---------------------------------------------
 
         if len(text) > 5000:
             return jsonify({
@@ -200,9 +176,6 @@ def translate():
                 "message": "Please keep the text below 5000 characters."
             }), 400
 
-        # ---------------------------------------------
-        # PROVIDER 1 - GOOGLE
-        # ---------------------------------------------
 
         try:
 
@@ -225,9 +198,6 @@ def translate():
                 str(google_error)
             )
 
-        # ---------------------------------------------
-        # PROVIDER 2 - MYMEMORY
-        # ---------------------------------------------
 
         try:
 
@@ -250,9 +220,6 @@ def translate():
                 str(memory_error)
             )
 
-        # ---------------------------------------------
-        # BOTH SERVICES FAILED
-        # ---------------------------------------------
 
         return jsonify({
             "success": False,
@@ -273,9 +240,6 @@ def translate():
         }), 500
 
 
-# ---------------------------------------------------------
-# HEALTH CHECK
-# ---------------------------------------------------------
 
 @app.route("/health")
 def health():
@@ -287,9 +251,6 @@ def health():
     })
 
 
-# ---------------------------------------------------------
-# RUN
-# ---------------------------------------------------------
 
 if __name__ == "__main__":
 

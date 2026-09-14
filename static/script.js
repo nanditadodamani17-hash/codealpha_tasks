@@ -1,12 +1,6 @@
-/* =========================================================
-   LANGAI — SMART LANGUAGE TRANSLATOR
-   Corrected Complete JavaScript
-========================================================= */
 
 
-/* =========================================================
-   DOM ELEMENTS
-========================================================= */
+
 
 const inputText = document.getElementById("inputText");
 const outputText = document.getElementById("outputText");
@@ -109,9 +103,6 @@ const topHistoryButton =
     document.getElementById("topHistoryButton");
 
 
-/* =========================================================
-   LANGUAGE INFORMATION
-========================================================= */
 
 const languageNames = {
 
@@ -157,10 +148,6 @@ const inputPlaceholders = {
 };
 
 
-/* =========================================================
-   SPEECH LANGUAGE MAP
-========================================================= */
-
 function getSpeechLanguage(language) {
 
     const map = {
@@ -188,9 +175,6 @@ function getSpeechLanguage(language) {
 }
 
 
-/* =========================================================
-   MESSAGE SYSTEM
-========================================================= */
 
 function showMessage(text, type = "info") {
 
@@ -217,9 +201,6 @@ function showMessage(text, type = "info") {
 }
 
 
-/* =========================================================
-   LANGUAGE NAME
-========================================================= */
 
 function getLanguageName(code) {
 
@@ -227,9 +208,6 @@ function getLanguageName(code) {
 }
 
 
-/* =========================================================
-   CHARACTER COUNT
-========================================================= */
 
 function updateCharacterCount() {
 
@@ -247,10 +225,6 @@ inputText.addEventListener(
     updateCharacterCount
 );
 
-
-/* =========================================================
-   INPUT LANGUAGE INFORMATION
-========================================================= */
 
 function updateInputLanguageInfo() {
 
@@ -282,9 +256,6 @@ function updateInputLanguageInfo() {
 }
 
 
-/* =========================================================
-   VIRTUAL KEYBOARD DATA
-========================================================= */
 
 const keyboards = {
 
@@ -482,9 +453,6 @@ const keyboards = {
 };
 
 
-/* =========================================================
-   KEYBOARD RENDER
-========================================================= */
 
 function renderKeyboard() {
 
@@ -570,9 +538,6 @@ function renderKeyboard() {
 }
 
 
-/* =========================================================
-   INSERT TEXT AT CURSOR
-========================================================= */
 
 function insertTextAtCursor(text) {
 
@@ -607,9 +572,6 @@ function insertTextAtCursor(text) {
 }
 
 
-/* =========================================================
-   KEYBOARD BUTTON
-========================================================= */
 
 keyboardToggle.addEventListener(
     "click",
@@ -641,9 +603,6 @@ closeKeyboard.addEventListener(
 );
 
 
-/* =========================================================
-   KEYBOARD ACTIONS
-========================================================= */
 
 keyboardClearButton.addEventListener(
     "click",
@@ -717,9 +676,6 @@ keyboardBackspaceButton.addEventListener(
 );
 
 
-/* =========================================================
-   LANGUAGE CHANGE
-========================================================= */
 
 sourceLanguage.addEventListener(
     "change",
@@ -744,10 +700,6 @@ targetLanguage.addEventListener(
     }
 );
 
-
-/* =========================================================
-   SWAP LANGUAGES
-========================================================= */
 
 swapButton.addEventListener(
     "click",
@@ -783,9 +735,6 @@ swapButton.addEventListener(
 );
 
 
-/* =========================================================
-   TRANSLATION
-========================================================= */
 
 translateButton.addEventListener(
     "click",
@@ -953,9 +902,6 @@ translateButton.addEventListener(
 );
 
 
-/* =========================================================
-   COPY TRANSLATION
-========================================================= */
 
 copyButton.addEventListener(
     "click",
@@ -1006,10 +952,6 @@ copyButton.addEventListener(
 );
 
 
-/* =========================================================
-   CLEAR INPUT
-========================================================= */
-
 clearButton.addEventListener(
     "click",
     clearAll
@@ -1038,10 +980,7 @@ function clearAll() {
 }
 
 
-/* =========================================================
-   SPEECH RECOGNITION
-   FIXED VERSION
-========================================================= */
+
 
 const SpeechRecognition =
     window.SpeechRecognition
@@ -1055,19 +994,12 @@ let isRecording = false;
 let recognitionStarting = false;
 
 
-/* ---------------------------------------------------------
-   CHECK SUPPORT
---------------------------------------------------------- */
 
 function speechRecognitionSupported() {
 
     return !!SpeechRecognition;
 }
 
-
-/* ---------------------------------------------------------
-   CREATE RECOGNITION
---------------------------------------------------------- */
 
 function createRecognition() {
 
@@ -1255,10 +1187,6 @@ function createRecognition() {
 }
 
 
-/* ---------------------------------------------------------
-   RESET VOICE BUTTON
---------------------------------------------------------- */
-
 function resetVoiceButton() {
 
     voiceInputButton.textContent =
@@ -1271,9 +1199,6 @@ function resetVoiceButton() {
 }
 
 
-/* ---------------------------------------------------------
-   START VOICE INPUT
---------------------------------------------------------- */
 
 function startVoiceInput() {
 
@@ -1347,9 +1272,6 @@ function startVoiceInput() {
 }
 
 
-/* ---------------------------------------------------------
-   STOP VOICE INPUT
---------------------------------------------------------- */
 
 function stopVoiceInput() {
 
@@ -1382,9 +1304,6 @@ function stopVoiceInput() {
 }
 
 
-/* ---------------------------------------------------------
-   VOICE BUTTON
---------------------------------------------------------- */
 
 voiceInputButton.addEventListener(
     "click",
@@ -1406,9 +1325,6 @@ voiceInputButton.addEventListener(
 );
 
 
-/* ---------------------------------------------------------
-   INSERT VOICE TEXT
---------------------------------------------------------- */
 
 function insertVoiceText(text) {
 
@@ -1444,9 +1360,6 @@ function insertVoiceText(text) {
 }
 
 
-/* =========================================================
-   TEXT TO SPEECH
-========================================================= */
 
 function getVoices() {
 
@@ -1462,9 +1375,6 @@ function getVoices() {
 }
 
 
-/* ---------------------------------------------------------
-   FIND BEST VOICE
---------------------------------------------------------- */
 
 function findBestVoice(
     voices,
@@ -1503,9 +1413,6 @@ function findBestVoice(
 }
 
 
-/* ---------------------------------------------------------
-   SPEAK TEXT
---------------------------------------------------------- */
 
 function speakText(
     text,
@@ -1605,7 +1512,6 @@ function speakText(
 
 
 /* ---------------------------------------------------------
-   SPEAK WITH VOICE
 --------------------------------------------------------- */
 
 function speakTextWithVoice(
@@ -1694,9 +1600,6 @@ function speakTextWithVoice(
 }
 
 
-/* =========================================================
-   READ INPUT
-========================================================= */
 
 readInputButton.addEventListener(
     "click",
@@ -1728,9 +1631,6 @@ readInputButton.addEventListener(
 );
 
 
-/* =========================================================
-   SPEAK TRANSLATION
-========================================================= */
 
 speakButton.addEventListener(
     "click",
@@ -1762,10 +1662,6 @@ speakButton.addEventListener(
 );
 
 
-/* =========================================================
-   STOP SPEAKING
-========================================================= */
-
 function stopSpeaking() {
 
     if (
@@ -1779,9 +1675,6 @@ function stopSpeaking() {
 }
 
 
-/* =========================================================
-   HISTORY
-========================================================= */
 
 const HISTORY_KEY =
     "langai_translation_history";
@@ -2022,9 +1915,6 @@ function escapeHtml(value) {
 }
 
 
-/* =========================================================
-   CLEAR HISTORY
-========================================================= */
 
 if (clearHistoryButton) {
 
@@ -2069,9 +1959,6 @@ if (clearHistoryButton) {
 }
 
 
-/* =========================================================
-   HISTORY SEARCH
-========================================================= */
 
 if (historySearch) {
 
@@ -2111,9 +1998,6 @@ if (historySearch) {
 }
 
 
-/* =========================================================
-   SHOW TRANSLATOR
-========================================================= */
 
 function showTranslator() {
 
@@ -2152,9 +2036,6 @@ function showTranslator() {
 }
 
 
-/* =========================================================
-   SHOW HISTORY
-========================================================= */
 
 function showHistory() {
 
@@ -2195,9 +2076,6 @@ function showHistory() {
 }
 
 
-/* =========================================================
-   SIDEBAR BUTTONS
-========================================================= */
 
 if (translatorSidebarBtn) {
 
@@ -2229,9 +2107,6 @@ if (topHistoryButton) {
 }
 
 
-/* =========================================================
-   KEYBOARD SHORTCUT
-========================================================= */
 
 inputText.addEventListener(
     "keydown",
@@ -2252,10 +2127,6 @@ inputText.addEventListener(
     }
 );
 
-
-/* =========================================================
-   BROWSER VOICES
-========================================================= */
 
 if (
     window.speechSynthesis
@@ -2278,9 +2149,6 @@ if (
 }
 
 
-/* =========================================================
-   INITIALIZATION
-========================================================= */
 
 updateInputLanguageInfo();
 
@@ -2293,9 +2161,6 @@ renderHistory();
 showTranslator();
 
 
-/* =========================================================
-   DEBUG INFORMATION
-========================================================= */
 
 console.log(
     "LangAI loaded successfully."
